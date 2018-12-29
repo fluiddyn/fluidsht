@@ -30,5 +30,5 @@ doc/ipynb/*.rst
 
 *.egg-info/*
 
-**/__pythran__/_*
+**/__pythran__/
 
