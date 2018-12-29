@@ -6,6 +6,7 @@
 
 """
 import numpy as np
+
 # to get a clear ImportError in case...
 import shtns
 
@@ -43,6 +44,7 @@ options_flags = make_namedtuple_from_module(shtns, "sht_{}", "flags", keys_flags
 Af = "float64[:]"
 Ac = "complex128[:]"
 
+
 @boost
 class OperatorsSphereHarmo2D:
     nlm: int
@@ -50,7 +52,9 @@ class OperatorsSphereHarmo2D:
     inv_K2_r: Af
 
     @boost
-    def hdivrotsh_from_uDuRsh(self, uD_lm: Ac, uR_lm: Ac, hdiv_lm: Ac=None, hrot_lm: Ac=None):
+    def hdivrotsh_from_uDuRsh(
+        self, uD_lm: Ac, uR_lm: Ac, hdiv_lm: Ac = None, hrot_lm: Ac = None
+    ):
         if hdiv_lm is None:
             # hdiv_lm = self.create_array_sh()
             hdiv_lm = np.empty(self.nlm, complex)
@@ -64,7 +68,9 @@ class OperatorsSphereHarmo2D:
         return hdiv_lm, hrot_lm
 
     @boost
-    def uDuRsh_from_hdivrotsh(self, hdiv_lm: Ac, hrot_lm: Ac, uD_lm: Ac=None, uR_lm: Ac=None):
+    def uDuRsh_from_hdivrotsh(
+        self, hdiv_lm: Ac, hrot_lm: Ac, uD_lm: Ac = None, uR_lm: Ac = None
+    ):
         if uD_lm is None:
             # uD_lm = self.create_array_sh()
             uD_lm = np.empty(self.nlm, complex)
@@ -96,11 +102,11 @@ class SHT2DWithSHTns(EasySHT):
         radius=radius_earth,
     ):
         super().__init__(
-             lmax, mmax, mres, norm, nlat, nlon, flags, polar_opt, nl_order, radius
+            lmax, mmax, mres, norm, nlat, nlon, flags, polar_opt, nl_order, radius
         )
         self.K2_r = self.l2_idx / self.radius
         self.inv_K2_r = self.radius / self.K2_not0
-        self.inv_K2_r[0] = 0.
+        self.inv_K2_r[0] = 0.0
         pass
 
     # functions for 2D vectorial spherical harmonic transforms
@@ -113,8 +119,8 @@ class SHT2DWithSHTns(EasySHT):
         if uu is None:
             uu = self.create_array_spat()
             vv = self.create_array_spat()
-        uD_lm = self.create_array_sh(0.)
-        uR_lm = self.create_array_sh(0.)
+        uD_lm = self.create_array_sh(0.0)
+        uR_lm = self.create_array_sh(0.0)
         self.uDuRsh_from_hdivrotsh(hdiv_lm, hrot_lm, uD_lm, uR_lm)
         self.sh.SHsphtor_to_spat(uD_lm, uR_lm, vv, uu)
         return uu, vv
@@ -136,8 +142,10 @@ class SHT2DWithSHTns(EasySHT):
         #                  uR_lm in hrot_lm
         # we compute div_lm and rot_lm
         return self.hdivrotsh_from_uDuRsh(
-            uD_lm=hdiv_lm, uR_lm=hrot_lm,  # Inputs
-            hdiv_lm=hdiv_lm, hrot_lm=hrot_lm  # Buffers to be overwritten
+            uD_lm=hdiv_lm,
+            uR_lm=hrot_lm,  # Inputs
+            hdiv_lm=hdiv_lm,
+            hrot_lm=hrot_lm,  # Buffers to be overwritten
         )
 
     def uv_from_uDuRsh(self, uD_lm, uR_lm, uu=None, vv=None):
@@ -185,7 +193,7 @@ class SHT2DWithSHTns(EasySHT):
         if gradf_lon is None:
             gradf_lon = self.create_array_spat(0)
             gradf_lat = self.create_array_spat(0)  # becareful bug if not 0!!!
-        #       We do not use SHsph_to_spat() because it seems that there is a 
+        #       We do not use SHsph_to_spat() because it seems that there is a
         #       problem (av: what exactly? does it still exist?)
         #       self.sh.SHsph_to_spat(f_lm, gradf_lat, gradf_lon)
         #       instead we use SHsphtor_to_spat(...) with tor_lm= zeros_lm
