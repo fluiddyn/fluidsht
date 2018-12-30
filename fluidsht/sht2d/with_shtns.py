@@ -5,13 +5,11 @@
    :members:
 
 """
-import numpy as np
-
+import functools
 # to get a clear ImportError in case...
 import shtns
 
 from fluiddyn.calcul.sphericalharmo import EasySHT, radius_earth
-from fluidpythran import boost
 from fluidsht.util import make_namedtuple_from_module
 
 
@@ -39,63 +37,18 @@ options_norm = make_namedtuple_from_module(
 
 options_flags = make_namedtuple_from_module(shtns, "sht_{}", "flags", keys_flags)
 
-# pythran import numpy as np
 
-Af = "float64[:]"
-Ac = "complex128[:]"
-
-
-@boost
-class OperatorsSphereHarmo2D:
-    nlm: int
-    K2_r: Af
-    inv_K2_r: Af
-
-    @boost
-    def hdivrotsh_from_uDuRsh(
-        self, uD_lm: Ac, uR_lm: Ac, hdiv_lm: Ac = None, hrot_lm: Ac = None
-    ):
-        if hdiv_lm is None:
-            # hdiv_lm = self.create_array_sh()
-            hdiv_lm = np.empty(self.nlm, complex)
-
-        if hrot_lm is None:
-            # hrot_lm = self.create_array_sh()
-            hrot_lm = np.empty(self.nlm, complex)
-
-        hdiv_lm[:] = -self.K2_r * uD_lm
-        hrot_lm[:] = self.K2_r * uR_lm
-        return hdiv_lm, hrot_lm
-
-    @boost
-    def uDuRsh_from_hdivrotsh(
-        self, hdiv_lm: Ac, hrot_lm: Ac, uD_lm: Ac = None, uR_lm: Ac = None
-    ):
-        if uD_lm is None:
-            # uD_lm = self.create_array_sh()
-            uD_lm = np.empty(self.nlm, complex)
-
-        if uR_lm is None:
-            # uR_lm = self.create_array_sh()
-            uR_lm = np.empty(self.nlm, complex)
-
-        uD_lm[:] = -hdiv_lm * self.inv_K2_r
-        uR_lm[:] = hrot_lm * self.inv_K2_r
-        return uD_lm, uR_lm
-
-
-# FIXME: @boost
 class SHT2DWithSHTns(EasySHT):
     __doc__ = EasySHT.__doc__
 
     def __init__(
         self,
+        nlat=None,
+        nlon=None,
         lmax=15,
         mmax=None,
         mres=1,
         norm=None,
-        nlat=None,
-        nlon=None,
         flags=None,
         polar_opt=1.0e-8,
         nl_order=2,
@@ -104,67 +57,102 @@ class SHT2DWithSHTns(EasySHT):
         super().__init__(
             lmax, mmax, mres, norm, nlat, nlon, flags, polar_opt, nl_order, radius
         )
-        self.K2_r = self.l2_idx / self.radius
-        self.inv_K2_r = self.radius / self.K2_not0
-        self.inv_K2_r[0] = 0.0
-        pass
 
     # functions for 2D vectorial spherical harmonic transforms
 
-    def uv_from_hdivrotsh(self, hdiv_lm, hrot_lm, u=None, v=None):
+    def set_grid(self, grid_type="gaussian"):
+        nlat = self.nlat
+        nlon = self.nlon
+
+        if grid_type == 'gaussian':
+            self.sh.set_grid(
+                nlat,
+                nlon,
+            #    options_flags.gauss_fly | options_flags.phi_contiguous,
+                options_flags.quick_init | options_flags.phi_contiguous,
+                1.e-10
+            )
+        elif grid_type == 'regular':
+            self.sh.set_grid(
+                nlat,
+                nlon,
+                options_flags.reg_dct | options_flags.phi_contiguous,
+                1.e-10
+            )
+
+    def vec_from_divrotsh(self, div_lm, rot_lm, u=None, v=None):
         """Velocities u, v from horizontal divergence, and vertical vorticity
         (u and v are overwritten).
 
         """
-        if uu is None:
-            uu = self.create_array_spat()
-            vv = self.create_array_spat()
-        uD_lm = self.create_array_sh(0.0)
-        uR_lm = self.create_array_sh(0.0)
-        self.uDuRsh_from_hdivrotsh(hdiv_lm, hrot_lm, uD_lm, uR_lm)
-        self.sh.SHsphtor_to_spat(uD_lm, uR_lm, vv, uu)
-        return uu, vv
+        if u is None:
+            u = self.create_array_spat()
+            v = self.create_array_spat()
+        # uD_lm = self.create_array_sh(0.0)
+        # uR_lm = self.create_array_sh(0.0)
 
-    def hdivrotsh_from_uv(self, uu, vv, hdiv_lm=None, hrot_lm=None):
+        # Reuse arrays
+        uD_lm = u
+        uR_lm = v
+
+        self.uDuRsh_from_divrotsh(div_lm, rot_lm, uD_lm, uR_lm)
+        self.sh.SHsphtor_to_spat(uD_lm, uR_lm, v, u)
+        return u, v
+
+    def vec_from_rotsh(self, rot_sh):
+        return self.vec_from_divrotsh(self._zeros_sh, rot_sh)
+
+    def vec_from_divsh(self, div_sh):
+        return self.vec_from_divrotsh(div_sh, self._zeros_sh)
+
+    def divrotsh_from_vec(self, u, v, div_lm=None, rot_lm=None):
         """Compute horizontal divergence, and vertical vorticity from u, v
         (div_lm and rot_lm are overwritten).
 
         """
-        if hdiv_lm is None:
-            hdiv_lm = self.create_array_sh()
-            hrot_lm = self.create_array_sh()
+        if div_lm is None:
+            div_lm = self.create_array_sh()
+            rot_lm = self.create_array_sh()
 
         # if self.order_lat == 'south_to_north':
-        #     vv = -vv
+        #     v = -v
         # print('order_lat',self.order_lat)
-        self.sh.spat_to_SHsphtor(vv, uu, hdiv_lm, hrot_lm)
-        # in fact there is uD_lm in hdiv_lm and
-        #                  uR_lm in hrot_lm
+        self.sh.spat_to_SHsphtor(v, u, div_lm, rot_lm)
+        # in fact there is uD_lm in div_lm and
+        #                  uR_lm in rot_lm
         # we compute div_lm and rot_lm
-        return self.hdivrotsh_from_uDuRsh(
-            uD_lm=hdiv_lm,
-            uR_lm=hrot_lm,  # Inputs
-            hdiv_lm=hdiv_lm,
-            hrot_lm=hrot_lm,  # Buffers to be overwritten
+        return self.divrotsh_from_vsh(
+            uD_lm=div_lm,
+            uR_lm=rot_lm,  # Inputs
+            div_lm=div_lm,
+            rot_lm=rot_lm,  # Buffers to be overwritten
         )
 
-    def uv_from_uDuRsh(self, uD_lm, uR_lm, uu=None, vv=None):
-        """Compute velocities uu, vv from uD, uR (uu and vv are overwritten).
+    def vec_from_vsh(self, uD_lm, uR_lm, u=None, v=None):
+        """Compute velocities u, v from vector spherical harmonics uD, uR (u and v
+        are overwritten).
 
         """
-        if uu is None:
-            uu = self.create_array_spat()
-            vv = self.create_array_spat()
-        self.sh.SHphtor_to_spat(uD_lm, uR_lm, vv, uu)
+        if u is None:
+            u = self.create_array_spat()
+            v = self.create_array_spat()
+        self.sh.SHphtor_to_spat(uD_lm, uR_lm, v, u)
 
         # if self.order_lat == 'south_to_north':
-        #    vv[:] = -vv+0       # because SHTns uses colatitude basis
+        #    v[:] = -v+0       # because SHTns uses colatitude basis
 
-        return uu, vv
+        return u, v
 
-    def uDuRsh_from_uv(self, uu, vv, uD_lm=None, uR_lm=None):
-        """Compute helmholtz decomposition of the velocities from uu, vv.
-        (uD_lm and uR_lm are overwritten).
+    def vsh_from_vec(self, u, v, uD_lm=None, uR_lm=None):
+        """Compute vector spherical harmonics uD_lm, uR_lm from from velocities u,
+        v (uD_lm and uR_lm are overwritten).
+
+        Note
+        ----
+        `Vector spherical harmonics (VSH)
+        <https://en.wikipedia.org/wiki/Vector_spherical_harmonics>`__ in 2D are in
+        fact equivalent to Helholtz decomposition as it is represented by a
+        divergent and rotational components as transformed quantities.
 
         """
         if uD_lm is None:
@@ -174,19 +162,17 @@ class SHT2DWithSHTns(EasySHT):
             uR_lm = self.create_array_sh()
 
         # if self.order_lat == 'south_to_north':
-        #     vv = -vv
+        #     v = -v
         # print('order_lat', self.order_lat)
-        self.sh.spat_to_SHsphtor(vv, uu, uD_lm, uR_lm)
-        # removed minus
+        self.sh.spat_to_SHsphtor(v, u, uD_lm, uR_lm)
+        # remove minus
         uD_lm[:] = -uD_lm[:]
         uR_lm[:] = -uR_lm[:]
         # print(self.radius)
         return uD_lm, uR_lm
 
     def gradf_from_fsh(self, f_lm, gradf_lon=None, gradf_lat=None):
-        """gradf from fsh.
-
-        Compute the gradient of a function f from its spherical
+        """Compute the gradient of a function f from its spherical
         harmonic coeff f_lm (gradf_lon and gradf_lat are overwritten)
 
         """
@@ -201,14 +187,24 @@ class SHT2DWithSHTns(EasySHT):
         self.sh.SHsphtor_to_spat(f_lm, self._zeros_sh, gradf_lat, gradf_lon)
 
         # if self.order_lat == 'south_to_north':
-        #    sign_inv_vv = -1
+        #    sign_inv_v = -1
         # else:
-        #    sign_inv_vv = 1
-        # sign_inv_vv = 1
-        gradf_lat[:] = +gradf_lat / self.radius  # *sign_inv_vv
+        #    sign_inv_v = 1
+        # sign_inv_v = 1
+        gradf_lat[:] = +gradf_lat / self.radius  # *sign_inv_v
         gradf_lon[:] = +gradf_lon / self.radius
         # print('radius', self.radius)
         return gradf_lon, gradf_lat
+
+    # Method aliases
+    divrotsh_from_vsh = EasySHT.hdivrotsh_from_uDuRsh
+    vsh_from_divrotsh = EasySHT.uDuRsh_from_hdivrotsh
+    create_array_spat_random = functools.partialmethod(
+        EasySHT.create_array_spat, "rand"
+    )
+    create_array_sh_random = functools.partialmethod(
+        EasySHT.create_array_sh, "rand"
+    )
 
 
 SHTclass = SHT2DWithSHTns
