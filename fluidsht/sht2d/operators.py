@@ -1,5 +1,6 @@
 import numpy as np
 from fluidpythran import boost
+from .. import create_sht_object
 from ..compat import cached_property
 
 # pythran import numpy as np
@@ -53,18 +54,12 @@ class OperatorsSphereHarmo2D:
         self, nlat=None, nlon=None, lmax=15, norm="fourpi", flags=None,
         sht=None
     ):
-        self.nlat = nlat
-        self.nlon = nlon
-        self.lmax = lmax
-        self.norm = norm
-        self.flags = flags
-
         if sht is None or sht == "default":
             sht = get_simple_2d_method()
 
         if isinstance(sht, str):
             if any([sht.startswith(s) for s in ["fluidsht.", "sht2d."]]):
-                opsht = create_sht_object(sht, nlat, nlon, lmax)
+                opsht = create_sht_object(sht, nlat, nlon, lmax=lmax)
             else:
                 raise ValueError(
                     (
@@ -75,15 +70,38 @@ class OperatorsSphereHarmo2D:
                     % sht
                 )
 
+        self.nlat = opsht.nlat
+        self.nlon = opsht.nlon
+        self.lmax = lmax
+        self.norm = norm
+        self.flags = flags
+
+
         self.opsht = opsht
         self.type_sht = opsht.__class__.__module__
 
-        self.sht = self.opsht.sht
-        self.isht = self.opsht.isht
-
-        self.sht_as_arg = opsht.sht_as_arg
-        self.isht_as_arg = opsht.isht_as_arg
-
+        for method in (
+            "set_grid",
+            # Initialization methods
+            "create_array_spat",
+            "create_array_spat_random",
+            "create_array_sh",
+            "create_array_sh_random",
+            # Generic transformations
+            "sht",
+            "isht",
+            "sht_as_arg",
+            "isht_as_arg",
+            # Velocity vector <-> Spherical Harmonics transformations methods
+            "vec_from_vsh",
+            "vec_from_divsh",
+            "vec_from_rotsh",
+            "vec_from_divrotsh",
+            "vsh_from_vec",
+            "divrotsh_from_vec",
+            "gradf_from_fsh",
+        ):
+            setattr(self, method, getattr(opsht, method))
 
     @cached_property
     def K2_r(self):
@@ -96,7 +114,7 @@ class OperatorsSphereHarmo2D:
         return inv_K2_r
 
     @boost
-    def hdivrotsh_from_uDuRsh(
+    def divrotsh_from_vsh(
         self, uD_lm: Ac, uR_lm: Ac, hdiv_lm: Ac = None, hrot_lm: Ac = None
     ):
         if hdiv_lm is None:
@@ -112,7 +130,7 @@ class OperatorsSphereHarmo2D:
         return hdiv_lm, hrot_lm
 
     @boost
-    def uDuRsh_from_hdivrotsh(
+    def vsh_from_divrotsh(
         self, hdiv_lm: Ac, hrot_lm: Ac, uD_lm: Ac = None, uR_lm: Ac = None
     ):
         if uD_lm is None:

@@ -68,7 +68,7 @@ def import_sht_class(method, raise_import_error=True):
     return mod.SHTclass
 
 
-def create_sht_object(method, n0=None, n1=None, n2=None, lmax=15):
+def create_sht_object(method, n0=None, n1=None, n2=None, lmax=15, norm=None, flags=None):
     """Helper for creating sht objects.
 
     Parameters
@@ -81,6 +81,15 @@ def create_sht_object(method, n0=None, n1=None, n2=None, lmax=15):
 
     n0, n1, n2 : int
       Dimensions of the real space array (in sequential).
+
+    lmax : int
+      Truncation degree
+
+    norm : str
+      Normalization factor
+
+    flags : int
+      Flags for instantiation
 
     Returns
     -------
@@ -100,7 +109,7 @@ def create_sht_object(method, n0=None, n1=None, n2=None, lmax=15):
         raise ValueError("Arguments incompatible")
 
     if n2 is None:
-        return cls(n0, n1, lmax)
+        return cls(n0, n1, lmax, norm=norm, flags=flags)
     else:
         raise NotImplementedError
-        # return cls(n0, n1, n2, lmax)
+        # return cls(n0, n1, n2, lmax, norm=flags, flags=flags)

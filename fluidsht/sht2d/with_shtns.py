@@ -52,7 +52,7 @@ class SHT2DWithSHTns(EasySHT):
         flags=None,
         polar_opt=1.0e-8,
         nl_order=2,
-        radius=radius_earth,
+        radius=1, # radius_earth,
     ):
         super().__init__(
             lmax, mmax, mres, norm, nlat, nlon, flags, polar_opt, nl_order, radius
@@ -136,7 +136,7 @@ class SHT2DWithSHTns(EasySHT):
         if u is None:
             u = self.create_array_spat()
             v = self.create_array_spat()
-        self.sh.SHphtor_to_spat(uD_lm, uR_lm, v, u)
+        self.sh.SHsphtor_to_spat(uD_lm, uR_lm, v, u)
 
         # if self.order_lat == 'south_to_north':
         #    v[:] = -v+0       # because SHTns uses colatitude basis
