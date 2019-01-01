@@ -22,7 +22,7 @@ def get_simple_2d_method():
 
 @boost
 class OperatorsSphereHarmo2D:
-    """Perform 2D FFT and operations on data.
+    r"""Perform 2D FFT and operations on data.
 
     Parameters
     ----------
@@ -45,6 +45,18 @@ class OperatorsSphereHarmo2D:
       module of fluidsht. The first part "fluidsht." of the module "path" can be
       omitted.
 
+    Notes
+    -----
+    Class attributes and their equivalent mathematical definitions
+
+    .. math::
+
+        l2_idx = l(l+1)
+        K2 = \frac{l(l+1)}{r^2} = -\Del
+        K2_r = K2 \times r = \frac{l(l+1)}{r}
+        inv_K2_r = K2_r^{-1} = \frac{r}{l(l+1)}
+
+    where, `:math:\Del := Laplacian operator`.
     """
     nlm: int
     K2_r: Af
@@ -62,6 +74,7 @@ class OperatorsSphereHarmo2D:
                 opsht = create_sht_object(
                     sht, nlat, nlon, lmax=lmax, norm=norm, flags=flags
                 )
+                print(f"{sht}: nlat={opsht.nlat}, nlon={opsht.nlon}")
             else:
                 raise ValueError(
                     (
@@ -118,8 +131,8 @@ class OperatorsSphereHarmo2D:
 
     @cached_property
     def inv_K2_r(self):
-        inv_K2_r = self.radius / self.K2_not0
-        inv_K2_r[0] = 0.0
+        inv_K2_r = 1.0 / (self.radius * self.K2_not0)
+        # inv_K2_r[0] = 0.0
         return inv_K2_r
 
     @cached_property

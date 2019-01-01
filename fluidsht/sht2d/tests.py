@@ -4,30 +4,49 @@ from numpy.testing import assert_array_almost_equal
 from fluidsht.sht2d.operators import OperatorsSphereHarmo2D
 
 
+def as_iterable(args):
+    if isinstance(args, np.ndarray):
+        return (args,)
+    else:
+        return args
+
+
 class TestOperators2D(unittest.TestCase):
     sht_class = "default"
 
     @classmethod
     def setUpClass(cls):
-        cls.oper = oper = OperatorsSphereHarmo2D(sht=cls.sht_class)
+        """Setup operator with default SHT class and parameters
+        such that no truncation occurs.
+
+        """
+        lmax = 15
+        cls.oper = oper = OperatorsSphereHarmo2D(
+            nlat=lmax+1, nlon=2*lmax+1, lmax=lmax,
+            sht=cls.sht_class
+        )
         cls.arrays_spat = [oper.create_array_spat(1.) for i in range(2)]
         cls.arrays_sh = [oper.create_array_sh_random() for i in range(2)]
         for array in cls.arrays_sh:
             array[np.logical_not(oper.where_l2_idx_positive)] = 0.0
 
-    # def test_transform_vec_vsh(self):
-    #     arrays_vec = self.arrays_spat
-    #     arrays_vsh = self.oper.vsh_from_vec(*arrays_vec)
-    #     arrays_vec2 = self.oper.vec_from_vsh(*arrays_vsh)
-    #     for i in range(2):
-    #         assert_array_almost_equal(arrays_vec[i], arrays_vec2[i])
+    def assert_reversible(self, arrays_in, forward, inverse):
+        forward = getattr(self.oper, forward)
+        inverse = getattr(self.oper, inverse)
+
+        arrays_transformed = forward(*as_iterable(arrays_in))
+        arrays_out = inverse(*as_iterable(arrays_transformed))
+
+        assert_array_almost_equal(arrays_in, arrays_out)
+
+    def test_transform_vec_vsh(self):
+        self.assert_reversible(self.arrays_spat, "vsh_from_vec", "vec_from_vsh")
 
     def test_transform_vsh_divrotsh(self):
-        arrays_vsh = self.arrays_sh
-        arrays_divrotsh = self.oper.divrotsh_from_vsh(*arrays_vsh)
-        arrays_vsh2 = self.oper.vsh_from_divrotsh(*arrays_divrotsh)
-        for i in range(2):
-            assert_array_almost_equal(arrays_vsh[i], arrays_vsh2[i], decimal=8)
+        self.assert_reversible(self.arrays_sh, "divrotsh_from_vsh", "vsh_from_divrotsh")
+
+    def test_sht_isht(self):
+        self.assert_reversible(self.arrays_spat[0], "sht", "isht")
 
 if __name__ == "__main__":
     unittest.main()

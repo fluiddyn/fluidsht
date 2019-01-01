@@ -29,6 +29,8 @@ keys_flags = (
     "real_norm",
     "scalar_only",
     "south_pole_first",
+    "load_save_cfg",
+    "allow_gpu",
 )
 
 options_norm = make_namedtuple_from_module(
@@ -92,7 +94,7 @@ class SHT2DWithSHTns(EasySHT):
         # uD_lm = self.create_array_sh(0.0)
         # uR_lm = self.create_array_sh(0.0)
 
-        self.vsh_from_divrotsh(div_lm, rot_lm, uD_lm, uR_lm)
+        self.vsh_from_divrotsh(div_lm, rot_lm)  # , uD_lm, uR_lm)
         self.vec_from_vsh(uD_lm, uR_lm, u, v)
         return u, v
 
@@ -115,9 +117,6 @@ class SHT2DWithSHTns(EasySHT):
         #     v = -v
         # print('order_lat',self.order_lat)
         self.sh.spat_to_SHsphtor(v, u, div_lm, rot_lm)
-        # in fact there is uD_lm in div_lm and
-        #                  uR_lm in rot_lm
-        # we compute div_lm and rot_lm
         return self.divrotsh_from_vsh(
             div_lm,
             rot_lm,  # Inputs
@@ -134,9 +133,6 @@ class SHT2DWithSHTns(EasySHT):
             u = self.create_array_spat()
             v = self.create_array_spat()
         self.sh.SHsphtor_to_spat(uD_lm, uR_lm, v, u)
-
-        # if self.order_lat == 'south_to_north':
-        #    v[:] = -v+0       # because SHTns uses colatitude basis
 
         return u, v
 
@@ -158,14 +154,7 @@ class SHT2DWithSHTns(EasySHT):
         if uR_lm is None:
             uR_lm = self.create_array_sh()
 
-        # if self.order_lat == 'south_to_north':
-        #     v = -v
-        # print('order_lat', self.order_lat)
         self.sh.spat_to_SHsphtor(v, u, uD_lm, uR_lm)
-        # remove minus
-        uD_lm[:] = -uD_lm[:]
-        uR_lm[:] = +uR_lm[:]
-        # print(self.radius)
         return uD_lm, uR_lm
 
     def gradf_from_fsh(self, f_lm, gradf_lon=None, gradf_lat=None):
@@ -194,7 +183,7 @@ class SHT2DWithSHTns(EasySHT):
         return gradf_lon, gradf_lat
 
     # Method aliases
-    # NOTE: Only kept for reference. Replaced by 
+    # NOTE: Only kept for reference. Replaced by pythranized methods in operators
     # divrotsh_from_vsh = EasySHT.hdivrotsh_from_uDuRsh
     # vsh_from_divrotsh = EasySHT.uDuRsh_from_hdivrotsh
     create_array_spat_random = functools.partialmethod(
