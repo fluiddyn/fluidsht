@@ -17,7 +17,7 @@ __about__ = d["__about__"]
 
 print(__about__)
 
-paths = ["fluidsht/sht2d/with_shtns.py"]
+paths = ["fluidsht/sht2d/operators.py"]
 make_pythran_files(
     [here / path for path in paths],
     mocked_modules=("shtns", "fluiddyn.calcul",

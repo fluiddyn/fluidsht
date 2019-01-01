@@ -12,6 +12,9 @@ clean_pyc:
 	find fluidsht -name "*.pyc" -delete
 	find fluidsht -name "__pycache__" -type d | xargs rm -rf
 
+cleanpythran:
+	fluidpythran -cc fluidsht.sht2d.operators
+
 clean: clean_pyc
 	rm -rf build dist
 

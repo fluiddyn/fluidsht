@@ -51,7 +51,7 @@ class OperatorsSphereHarmo2D:
     inv_K2_r: Af
 
     def __init__(
-        self, nlat=None, nlon=None, lmax=15, norm="fourpi", flags=None,
+        self, nlat=None, nlon=None, lmax=15, norm="fourpi", flags=0,
         sht=None
     ):
         if sht is None or sht == "default":
@@ -59,29 +59,38 @@ class OperatorsSphereHarmo2D:
 
         if isinstance(sht, str):
             if any([sht.startswith(s) for s in ["fluidsht.", "sht2d."]]):
-                opsht = create_sht_object(sht, nlat, nlon, lmax=lmax)
+                opsht = create_sht_object(
+                    sht, nlat, nlon, lmax=lmax, norm=norm, flags=flags
+                )
             else:
                 raise ValueError(
                     (
                         "Cannot instantiate %s. Expected something like "
-                        "'sequential', 'fluidsht.sht2d.<method>' or "
+                        "'default', 'fluidsht.sht2d.<method>' or "
                         "'sht2d.<method>'"
                     )
                     % sht
                 )
 
-        self.nlat = opsht.nlat
-        self.nlon = opsht.nlon
+        self.opsht = opsht
+        self.type_sht = opsht.__class__.__module__
+
+        for attr in (
+            "nlat",
+            "nlon",
+            "nlm",
+            "l2_idx",  # l(l+1)
+            "radius",
+            "K2",
+            "K2_not0",
+        ):
+            self.copyattr(attr)
+
         self.lmax = lmax
         self.norm = norm
         self.flags = flags
 
-
-        self.opsht = opsht
-        self.type_sht = opsht.__class__.__module__
-
         for method in (
-            "set_grid",
             # Initialization methods
             "create_array_spat",
             "create_array_spat_random",
@@ -101,7 +110,7 @@ class OperatorsSphereHarmo2D:
             "divrotsh_from_vec",
             "gradf_from_fsh",
         ):
-            setattr(self, method, getattr(opsht, method))
+            self.copyattr(method)
 
     @cached_property
     def K2_r(self):
@@ -113,25 +122,34 @@ class OperatorsSphereHarmo2D:
         inv_K2_r[0] = 0.0
         return inv_K2_r
 
-    @boost
+    @cached_property
+    def where_l2_idx_positive(self):
+        return self.l2_idx > 0
+
+    def copyattr(self, attr):
+        setattr(self, attr, getattr(self.opsht, attr))
+
+    # FIXME: default arguments does not work
+    # @boost
     def divrotsh_from_vsh(
-        self, uD_lm: Ac, uR_lm: Ac, hdiv_lm: Ac = None, hrot_lm: Ac = None
+        self, uD_lm: Ac, uR_lm: Ac, div_lm: Ac = None, rot_lm: Ac = None
     ):
-        if hdiv_lm is None:
-            # hdiv_lm = self.create_array_sh()
-            hdiv_lm = np.empty(self.nlm, complex)
+        if div_lm is None:
+            # div_lm = self.create_array_sh()
+            div_lm = np.empty(self.nlm, complex)
 
-        if hrot_lm is None:
-            # hrot_lm = self.create_array_sh()
-            hrot_lm = np.empty(self.nlm, complex)
+        if rot_lm is None:
+            # rot_lm = self.create_array_sh()
+            rot_lm = np.empty(self.nlm, complex)
 
-        hdiv_lm[:] = -self.K2_r * uD_lm
-        hrot_lm[:] = self.K2_r * uR_lm
-        return hdiv_lm, hrot_lm
+        div_lm[:] = -self.K2_r * uD_lm
+        rot_lm[:] = self.K2_r * uR_lm
+        return div_lm, rot_lm
 
-    @boost
+    # FIXME: default arguments does not work
+    # @boost
     def vsh_from_divrotsh(
-        self, hdiv_lm: Ac, hrot_lm: Ac, uD_lm: Ac = None, uR_lm: Ac = None
+        self, div_lm: Ac, rot_lm: Ac, uD_lm: Ac = None, uR_lm: Ac = None
     ):
         if uD_lm is None:
             # uD_lm = self.create_array_sh()
@@ -141,7 +159,6 @@ class OperatorsSphereHarmo2D:
             # uR_lm = self.create_array_sh()
             uR_lm = np.empty(self.nlm, complex)
 
-        uD_lm[:] = -hdiv_lm * self.inv_K2_r
-        uR_lm[:] = hrot_lm * self.inv_K2_r
+        uD_lm[:] = -div_lm * self.inv_K2_r
+        uR_lm[:] = rot_lm * self.inv_K2_r
         return uD_lm, uR_lm
-

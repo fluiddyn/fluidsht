@@ -9,7 +9,7 @@ import functools
 # to get a clear ImportError in case...
 import shtns
 
-from fluiddyn.calcul.sphericalharmo import EasySHT, radius_earth
+from fluiddyn.calcul.sphericalharmo import EasySHT
 from fluidsht.util import make_namedtuple_from_module
 
 
@@ -49,36 +49,36 @@ class SHT2DWithSHTns(EasySHT):
         mmax=None,
         mres=1,
         norm=None,
-        flags=None,
+        flags=0,
         polar_opt=1.0e-8,
         nl_order=2,
-        radius=1, # radius_earth,
-    ):
+        radius=1,
+        grid_type="gaussian",
+    ):  
+        if isinstance(norm, str):
+            norm = getattr(options_norm, norm)
+
+        if grid_type == 'gaussian':
+            flags = (
+                # options_flags.gauss_fly
+                options_flags.quick_init
+                | options_flags.phi_contiguous
+                | options_flags.south_pole_first
+                | flags
+            )
+        elif grid_type == 'regular':
+            flags = (
+                options_flags.reg_dct
+                | options_flags.phi_contiguous
+                | options_flags.south_pole_first
+                | flags
+            )
+        
         super().__init__(
             lmax, mmax, mres, norm, nlat, nlon, flags, polar_opt, nl_order, radius
         )
 
     # functions for 2D vectorial spherical harmonic transforms
-
-    def set_grid(self, grid_type="gaussian"):
-        nlat = self.nlat
-        nlon = self.nlon
-
-        if grid_type == 'gaussian':
-            self.sh.set_grid(
-                nlat,
-                nlon,
-            #    options_flags.gauss_fly | options_flags.phi_contiguous,
-                options_flags.quick_init | options_flags.phi_contiguous,
-                1.e-10
-            )
-        elif grid_type == 'regular':
-            self.sh.set_grid(
-                nlat,
-                nlon,
-                options_flags.reg_dct | options_flags.phi_contiguous,
-                1.e-10
-            )
 
     def vec_from_divrotsh(self, div_lm, rot_lm, u=None, v=None):
         """Velocities u, v from horizontal divergence, and vertical vorticity
@@ -88,15 +88,12 @@ class SHT2DWithSHTns(EasySHT):
         if u is None:
             u = self.create_array_spat()
             v = self.create_array_spat()
+
         # uD_lm = self.create_array_sh(0.0)
         # uR_lm = self.create_array_sh(0.0)
 
-        # Reuse arrays
-        uD_lm = u
-        uR_lm = v
-
-        self.uDuRsh_from_divrotsh(div_lm, rot_lm, uD_lm, uR_lm)
-        self.sh.SHsphtor_to_spat(uD_lm, uR_lm, v, u)
+        self.vsh_from_divrotsh(div_lm, rot_lm, uD_lm, uR_lm)
+        self.vec_from_vsh(uD_lm, uR_lm, u, v)
         return u, v
 
     def vec_from_rotsh(self, rot_sh):
@@ -122,10 +119,10 @@ class SHT2DWithSHTns(EasySHT):
         #                  uR_lm in rot_lm
         # we compute div_lm and rot_lm
         return self.divrotsh_from_vsh(
-            uD_lm=div_lm,
-            uR_lm=rot_lm,  # Inputs
-            div_lm=div_lm,
-            rot_lm=rot_lm,  # Buffers to be overwritten
+            div_lm,
+            rot_lm,  # Inputs
+            div_lm,
+            rot_lm,  # Buffers to be overwritten
         )
 
     def vec_from_vsh(self, uD_lm, uR_lm, u=None, v=None):
@@ -167,7 +164,7 @@ class SHT2DWithSHTns(EasySHT):
         self.sh.spat_to_SHsphtor(v, u, uD_lm, uR_lm)
         # remove minus
         uD_lm[:] = -uD_lm[:]
-        uR_lm[:] = -uR_lm[:]
+        uR_lm[:] = +uR_lm[:]
         # print(self.radius)
         return uD_lm, uR_lm
 
@@ -197,8 +194,9 @@ class SHT2DWithSHTns(EasySHT):
         return gradf_lon, gradf_lat
 
     # Method aliases
-    divrotsh_from_vsh = EasySHT.hdivrotsh_from_uDuRsh
-    vsh_from_divrotsh = EasySHT.uDuRsh_from_hdivrotsh
+    # NOTE: Only kept for reference. Replaced by 
+    # divrotsh_from_vsh = EasySHT.hdivrotsh_from_uDuRsh
+    # vsh_from_divrotsh = EasySHT.uDuRsh_from_hdivrotsh
     create_array_spat_random = functools.partialmethod(
         EasySHT.create_array_spat, "rand"
     )
