@@ -82,48 +82,6 @@ class SHT2DWithSHTns(EasySHT):
 
     # functions for 2D vectorial spherical harmonic transforms
 
-    def vec_from_divrotsh(self, div_lm, rot_lm, u=None, v=None):
-        """Velocities u, v from horizontal divergence, and vertical vorticity
-        (u and v are overwritten).
-
-        """
-        if u is None:
-            u = self.create_array_spat()
-            v = self.create_array_spat()
-
-        # uD_lm = self.create_array_sh(0.0)
-        # uR_lm = self.create_array_sh(0.0)
-
-        self.vsh_from_divrotsh(div_lm, rot_lm)  # , uD_lm, uR_lm)
-        self.vec_from_vsh(uD_lm, uR_lm, u, v)
-        return u, v
-
-    def vec_from_rotsh(self, rot_sh):
-        return self.vec_from_divrotsh(self._zeros_sh, rot_sh)
-
-    def vec_from_divsh(self, div_sh):
-        return self.vec_from_divrotsh(div_sh, self._zeros_sh)
-
-    def divrotsh_from_vec(self, u, v, div_lm=None, rot_lm=None):
-        """Compute horizontal divergence, and vertical vorticity from u, v
-        (div_lm and rot_lm are overwritten).
-
-        """
-        if div_lm is None:
-            div_lm = self.create_array_sh()
-            rot_lm = self.create_array_sh()
-
-        # if self.order_lat == 'south_to_north':
-        #     v = -v
-        # print('order_lat',self.order_lat)
-        self.sh.spat_to_SHsphtor(v, u, div_lm, rot_lm)
-        return self.divrotsh_from_vsh(
-            div_lm,
-            rot_lm,  # Inputs
-            div_lm,
-            rot_lm,  # Buffers to be overwritten
-        )
-
     def vec_from_vsh(self, uD_lm, uR_lm, u=None, v=None):
         """Compute velocities u, v from vector spherical harmonics uD, uR (u and v
         are overwritten).

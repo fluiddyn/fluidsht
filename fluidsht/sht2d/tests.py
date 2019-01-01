@@ -45,6 +45,9 @@ class TestOperators2D(unittest.TestCase):
     def test_transform_vsh_divrotsh(self):
         self.assert_reversible(self.arrays_sh, "divrotsh_from_vsh", "vsh_from_divrotsh")
 
+    def test_transform_vec_divrotsh(self):
+        self.assert_reversible(self.arrays_spat, "divrotsh_from_vec", "vec_from_divrotsh")
+
     def test_sht_isht(self):
         self.assert_reversible(self.arrays_spat[0], "sht", "isht")
 

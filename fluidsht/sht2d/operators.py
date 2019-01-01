@@ -96,6 +96,7 @@ class OperatorsSphereHarmo2D:
             "radius",
             "K2",
             "K2_not0",
+            "_zeros_sh"
         ):
             self.copyattr(attr)
 
@@ -116,11 +117,8 @@ class OperatorsSphereHarmo2D:
             "isht_as_arg",
             # Velocity vector <-> Spherical Harmonics transformations methods
             "vec_from_vsh",
-            "vec_from_divsh",
-            "vec_from_rotsh",
-            "vec_from_divrotsh",
             "vsh_from_vec",
-            "divrotsh_from_vec",
+            # Gradient
             "gradf_from_fsh",
         ):
             self.copyattr(method)
@@ -175,3 +173,44 @@ class OperatorsSphereHarmo2D:
         uD_lm[:] = -div_lm * self.inv_K2_r
         uR_lm[:] = rot_lm * self.inv_K2_r
         return uD_lm, uR_lm
+
+    def vec_from_divrotsh(self, div_lm, rot_lm, u=None, v=None):
+        """Velocities u, v from horizontal divergence, and vertical vorticity
+        (u and v are overwritten).
+
+        """
+        if u is None:
+            u = self.create_array_spat()
+        if v is None:
+            v = self.create_array_spat()
+
+        uD_lm, uR_lm = self.vsh_from_divrotsh(div_lm, rot_lm)
+        return self.vec_from_vsh(uD_lm, uR_lm, u, v)
+
+    def vec_from_rotsh(self, rot_sh):
+        return self.vec_from_divrotsh(self._zeros_sh, rot_sh)
+
+    def vec_from_divsh(self, div_sh):
+        return self.vec_from_divrotsh(div_sh, self._zeros_sh)
+
+    def divrotsh_from_vec(self, u, v, div_lm=None, rot_lm=None):
+        """Compute horizontal divergence, and vertical vorticity from u, v
+        (div_lm and rot_lm are overwritten).
+
+        """
+        if div_lm is None:
+            div_lm = self.create_array_sh()
+        if rot_lm is None:
+            rot_lm = self.create_array_sh()
+
+        # Reuse arrays
+        uD_lm = div_lm
+        uR_lm = rot_lm
+
+        self.vsh_from_vec(v, u, uD_lm, uR_lm)
+        return self.divrotsh_from_vsh(
+            uD_lm,
+            uR_lm,  # Inputs
+            div_lm,
+            rot_lm,  # Buffers to be overwritten
+        )
