@@ -19,12 +19,8 @@ create sht objects:
 from importlib import import_module as _import_module
 from fluidsht._version import __version__, __about__
 
-__all__ = [
-    "__version__",
-    "__about__",
-    "import_sht_class",
-    "create_sht_object",
-]
+__all__ = ["__version__", "__about__", "import_sht_class", "create_sht_object"]
+
 
 def import_sht_class(method, raise_import_error=True):
     """Import a sht class.

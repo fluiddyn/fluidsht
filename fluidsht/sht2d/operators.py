@@ -63,8 +63,7 @@ class OperatorsSphereHarmo2D:
     inv_K2_r: Af
 
     def __init__(
-        self, nlat=None, nlon=None, lmax=15, norm="fourpi", flags=0,
-        sht=None
+        self, nlat=None, nlon=None, lmax=15, norm="fourpi", flags=0, sht=None
     ):
         if sht is None or sht == "default":
             sht = get_simple_2d_method()
@@ -96,7 +95,7 @@ class OperatorsSphereHarmo2D:
             "radius",
             "K2",
             "K2_not0",
-            "_zeros_sh"
+            "_zeros_sh",
         ):
             self.copyattr(attr)
 
@@ -209,8 +208,5 @@ class OperatorsSphereHarmo2D:
 
         self.vsh_from_vec(v, u, uD_lm, uR_lm)
         return self.divrotsh_from_vsh(
-            uD_lm,
-            uR_lm,  # Inputs
-            div_lm,
-            rot_lm,  # Buffers to be overwritten
+            uD_lm, uR_lm, div_lm, rot_lm  # Inputs  # Buffers to be overwritten
         )

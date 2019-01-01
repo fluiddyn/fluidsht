@@ -6,6 +6,7 @@
 
 """
 import functools
+
 # to get a clear ImportError in case...
 import shtns
 
@@ -56,11 +57,11 @@ class SHT2DWithSHTns(EasySHT):
         nl_order=2,
         radius=1,
         grid_type="gaussian",
-    ):  
+    ):
         if isinstance(norm, str):
             norm = getattr(options_norm, norm)
 
-        if grid_type == 'gaussian':
+        if grid_type == "gaussian":
             flags = (
                 # options_flags.gauss_fly
                 options_flags.quick_init
@@ -68,14 +69,14 @@ class SHT2DWithSHTns(EasySHT):
                 | options_flags.south_pole_first
                 | flags
             )
-        elif grid_type == 'regular':
+        elif grid_type == "regular":
             flags = (
                 options_flags.reg_dct
                 | options_flags.phi_contiguous
                 | options_flags.south_pole_first
                 | flags
             )
-        
+
         super().__init__(
             lmax, mmax, mres, norm, nlat, nlon, flags, polar_opt, nl_order, radius
         )

@@ -22,10 +22,9 @@ class TestOperators2D(unittest.TestCase):
         """
         lmax = 15
         cls.oper = oper = OperatorsSphereHarmo2D(
-            nlat=lmax+1, nlon=2*lmax+1, lmax=lmax,
-            sht=cls.sht_class
+            nlat=lmax + 1, nlon=2 * lmax + 1, lmax=lmax, sht=cls.sht_class
         )
-        cls.arrays_spat = [oper.create_array_spat(1.) for i in range(2)]
+        cls.arrays_spat = [oper.create_array_spat(1.0) for i in range(2)]
         cls.arrays_sh = [oper.create_array_sh_random() for i in range(2)]
         for array in cls.arrays_sh:
             array[np.logical_not(oper.where_l2_idx_positive)] = 0.0
@@ -43,13 +42,18 @@ class TestOperators2D(unittest.TestCase):
         self.assert_reversible(self.arrays_spat, "vsh_from_vec", "vec_from_vsh")
 
     def test_transform_vsh_divrotsh(self):
-        self.assert_reversible(self.arrays_sh, "divrotsh_from_vsh", "vsh_from_divrotsh")
+        self.assert_reversible(
+            self.arrays_sh, "divrotsh_from_vsh", "vsh_from_divrotsh"
+        )
 
     def test_transform_vec_divrotsh(self):
-        self.assert_reversible(self.arrays_spat, "divrotsh_from_vec", "vec_from_divrotsh")
+        self.assert_reversible(
+            self.arrays_spat, "divrotsh_from_vec", "vec_from_divrotsh"
+        )
 
     def test_sht_isht(self):
         self.assert_reversible(self.arrays_spat[0], "sht", "isht")
+
 
 if __name__ == "__main__":
     unittest.main()
