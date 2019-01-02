@@ -20,9 +20,7 @@ print(__about__)
 paths = ["fluidsht/sht2d/operators.py"]
 make_pythran_files(
     [here / path for path in paths],
-    mocked_modules=("shtns", "fluiddyn.calcul",
-                    "fluiddyn.calcul.sphericalharmo",
-                    "fluiddyn.calcul.sphericalharmo.EasySHT"),
+    mocked_modules=("cached_property",),
 )
 
 

@@ -111,6 +111,3 @@ def create_sht_object(
     else:
         raise NotImplementedError
         # return cls(n0, n1, n2, lmax, norm=flags, flags=flags)
-
-
-from fluidsht.sht2d.operators import OperatorsSphereHarmo2D
