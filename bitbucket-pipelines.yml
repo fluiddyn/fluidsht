@@ -15,7 +15,6 @@ pipelines:
               - pip
             script:
               - pip install -U tox --user
-              - bash ./doc/install/install_shtns.sh
               - tox -e py36,codecov
         - step:
             image: fluiddyn/python3-stable
@@ -23,7 +22,6 @@ pipelines:
               - pip
             script:
               - pip install -U tox --user
-              - bash ./doc/install/install_shtns.sh
               - tox -vv -e py36-pythran,codecov
     dev:
       - parallel:
@@ -33,7 +31,6 @@ pipelines:
               - pip
             script:
               - pip install -U tox --user
-              - bash ./doc/install/install_shtns.sh
               - tox -e py36,codecov
         - step:
             image: fluiddyn/python3-stable
@@ -41,5 +38,4 @@ pipelines:
               - pip
             script:
               - pip install -U tox --user
-              - bash ./doc/install/install_shtns.sh
               - tox -vv -e py36-pythran,codecov
