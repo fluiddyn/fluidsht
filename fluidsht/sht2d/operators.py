@@ -1,9 +1,11 @@
+from contextlib import suppress
 import numpy as np
 from fluidpythran import boost
 from .. import create_sht_object
 from ..compat import cached_property
 
 # pythran import numpy as np
+Ai = "int32[]"
 Af = "float64[:]"
 Ac = "complex128[:]"
 
@@ -22,7 +24,7 @@ def get_simple_2d_method():
 
 @boost
 class OperatorsSphereHarmo2D:
-    r"""Perform 2D FFT and operations on data.
+    r"""Perform 2D SHT and operations on data.
 
     Parameters
     ----------
@@ -58,7 +60,7 @@ class OperatorsSphereHarmo2D:
 
     where, `:math:\Del := Laplacian operator`.
     """
-    nlm: int
+    shapeK: Ai
     K2_r: Af
     inv_K2_r: Af
 
@@ -91,7 +93,8 @@ class OperatorsSphereHarmo2D:
         for attr in (
             "nlat",
             "nlon",
-            "nlm",
+            "shapeX",
+            "shapeK",
             "l2_idx",  # l(l+1)
             "radius",
             "K2",
@@ -138,7 +141,10 @@ class OperatorsSphereHarmo2D:
         return self.l2_idx > 0
 
     def copyattr(self, attr):
-        setattr(self, attr, getattr(self.opsht, attr))
+        # For short term development.
+        # To be removed when the backends are the same.
+        with suppress(AttributeError):
+            setattr(self, attr, getattr(self.opsht, attr))
 
     # FIXME: default arguments does not work
     # @boost
@@ -147,11 +153,11 @@ class OperatorsSphereHarmo2D:
     ):
         if div_lm is None:
             # div_lm = self.create_array_sh()
-            div_lm = np.empty(self.nlm, complex)
+            div_lm = np.empty(self.shapeK, complex)
 
         if rot_lm is None:
             # rot_lm = self.create_array_sh()
-            rot_lm = np.empty(self.nlm, complex)
+            rot_lm = np.empty(self.shapeK, complex)
 
         div_lm[:] = -self.K2_r * uD_lm
         rot_lm[:] = self.K2_r * uR_lm
@@ -164,11 +170,11 @@ class OperatorsSphereHarmo2D:
     ):
         if uD_lm is None:
             # uD_lm = self.create_array_sh()
-            uD_lm = np.empty(self.nlm, complex)
+            uD_lm = np.empty(self.shapeK, complex)
 
         if uR_lm is None:
             # uR_lm = self.create_array_sh()
-            uR_lm = np.empty(self.nlm, complex)
+            uR_lm = np.empty(self.shapeK, complex)
 
         uD_lm[:] = -div_lm * self.inv_K2_r
         uR_lm[:] = rot_lm * self.inv_K2_r
