@@ -68,5 +68,6 @@ class TestOperators2D(unittest.TestCase):
 class TestOperators2DWithSHTOOLS(TestOperators2D):
     sht_class = "sht2d._try_with_shtools"
 
+
 if __name__ == "__main__":
     unittest.main()
