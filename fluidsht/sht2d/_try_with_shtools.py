@@ -44,9 +44,9 @@ class SHT2DWithSHTOOLS:
         self.grid_type = grid_type
 
         if grid_type == "gaussian":
-            self.w, self.zero = shtools.SHGLQ(lmax)
-            self._sht = shtools.SHExpandGLQC
-            self._isht = shtools.MakeGridGLQC
+            self._zeros, self._weights = shtools.SHGLQ(lmax)
+            self._sht = shtools.SHExpandGLQ
+            self._isht = shtools.MakeGridGLQ
             # TODO: implement lmax_calc to allow truncation
             if nlat:
                 assert nlat == lmax + 1
@@ -67,8 +67,8 @@ class SHT2DWithSHTOOLS:
     def sht(self, field):
         return self._sht(
             field,
-            w=self.w,
-            zero=self.zero,
+            w=self._weights,
+            zero=self._zeros,
             norm=self.norm,
             csphase=self.flags
         )
@@ -76,7 +76,7 @@ class SHT2DWithSHTOOLS:
     def isht(self, field_sh):
         return self._isht(
             field_sh,
-            zero=self.zero,
+            zero=self._zeros,
             norm=self.norm,
             csphase=self.flags
         )
