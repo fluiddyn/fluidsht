@@ -44,7 +44,6 @@ if use_pythran:
 
 setup(
     version=__version__,
-    packages=find_packages(exclude=["doc"]),
     cmdclass={"build_ext": fluidsht_build_ext},
     ext_modules=ext_modules,
 )

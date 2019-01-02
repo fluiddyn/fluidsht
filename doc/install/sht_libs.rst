@@ -1,21 +1,52 @@
 Supported SHT libraries and their installation
 ==============================================
 
-SHTns
------
-*`SHTns <https://users.isterre.fr/nschaeff/SHTns/>`_ SHTns is a high
-performance library for Spherical Harmonic Transform written in C, aimed at
-numerical simulation (fluid flows, mhd, ...) in spherical geometries.*
+`SHTns <https://users.isterre.fr/nschaeff/SHTns/>`_
+------------------------------------------------------
 
-It scales using OpenMP, and is probably the fastest implementation for
-moderately sized grids.
+SHTns is a high performance library for Spherical Harmonic Transform written
+in C, aimed at numerical simulation (fluid flows, mhd, ...) in spherical
+geometries. It scales using OpenMP, SIMD, and with beta-support for CUDA. It
+is probably the fastest implementation for moderately sized grids.
 
-SHT libraries depend on an FFTW installation. To know how to install see the
+``SHTns`` uses a simple GNU Autotools based installation procedure::
+
+    hg clone https://bitbucket.org/nschaeff/shtns
+    cd shtns
+    hg update v3.1
+    ./configure --enable-openmp --enable-python
+    make
+    python setup.py install
+
+Note that SHTns depend on an FFTW installation. To install FFTW see the
 relevant `fluidfft
-documentation<https://fluidfft.readthedocs.io/en/latest/install/fft_libs.html>`.
-``SHTns`` uses a simple GNU Autotools based installation procedure, with a
-``./configure``, ``make`` and ``make install`` step. If you have setup ``spack``
-as suggested above , this can be done easily::
+documentation <https://fluidfft.readthedocs.io/en/latest/install/fft_libs.html>`_.
+
+If you have setup ``spack``, the above can be done as follows (needs improvement)::
 
     spack install shtns+openmp+python
     module load shtns
+
+`SHTOOLS <https://shtools.oca.eu/shtools/>`__
+---------------------------------------------
+
+Simply install as::
+
+    pip install pyshtools
+
+`Libsharp <https://github.com/Libsharp/libsharp>`__
+---------------------------------------------------
+
+Libsharp has an MPI implementation to perform SHT analysis and synthesis.
+Installation is possible as:
+
+    pip install mpi4py numpy cython
+    git clone https://github.com/Libsharp/libsharp
+    cd libsharp
+    autoconf
+    ./configure --enable-pic
+    make -j
+    cd python
+    LIBSHARP=../auto python setup.py install
+
+However due to lack of documentation it is hard to implement an API bridge.
