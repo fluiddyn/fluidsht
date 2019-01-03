@@ -85,8 +85,6 @@ is pip installable. There are other SHT codes such as:
 
 - `Rayleigh <https://github.com/geodynamics/Rayleigh>`_
 
-- `SHTOOLS <https://github.com/SHTOOLS/SHTOOLS>`_
-
 - `S2HAT <http://www.apc.univ-paris7.fr/APC_CS/Recherche/Adamis/MIDAS09/software/s2hat/s2hat.html>`_
 
 which may be pursued if needed.

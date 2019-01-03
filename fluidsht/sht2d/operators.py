@@ -1,3 +1,11 @@
+"""Operators 2D (:mod:`fluidfft.sht2d.operators`)
+=================================================
+
+.. autoclass:: OperatorsSphereHarmo2D
+   :members:
+   :undoc-members:
+
+"""
 from contextlib import suppress
 import numpy as np
 from fluidpythran import boost
@@ -5,12 +13,17 @@ from .. import create_sht_object
 from ..compat import cached_property
 
 # pythran import numpy as np
+
 Ai = "int32[]"
 Af = "float64[:]"
 Ac = "complex128[:]"
 
 
-def get_simple_2d_method():
+def get_simple_2d_method() -> str:
+    """Easily select an available SHT library. Used by the operators class when
+    ``sht="default"`` is specified.
+
+    """
     try:
         import shtns
 
@@ -49,16 +62,16 @@ class OperatorsSphereHarmo2D:
 
     Notes
     -----
-    Class attributes and their equivalent mathematical definitions
+    Some of the class attributes and their equivalent mathematical definitions
 
     .. math::
 
-        l2_idx = l(l+1)
-        K2 = \frac{l(l+1)}{r^2} = -\Del
-        K2_r = K2 \times r = \frac{l(l+1)}{r}
-        inv_K2_r = K2_r^{-1} = \frac{r}{l(l+1)}
+        \texttt{l2_idx} &= l(l+1) \\
+        \texttt{K2} &= \frac{l(l+1)}{r^2} &= -\Delta \\
+        \texttt{K2_r} &= \texttt{K2} \times r &= \frac{l(l+1)}{r} \\
+        \texttt{inv_K2_r} &= \texttt{K2_r}^{-1} &= \frac{r}{l(l+1)}
 
-    where, `:math:\Del := Laplacian operator`.
+    where, :math:`\Delta = \nabla^2 :=` Laplacian operator.
     """
     shapeK: Ai
     K2_r: Af
@@ -141,6 +154,7 @@ class OperatorsSphereHarmo2D:
         return self.l2_idx > 0
 
     def copyattr(self, attr):
+        """Copies attributes / methods from ``opsht`` instance."""
         # For short term development.
         # To be removed when the backends are the same.
         with suppress(AttributeError):
@@ -151,6 +165,10 @@ class OperatorsSphereHarmo2D:
     def divrotsh_from_vsh(
         self, uD_lm: Ac, uR_lm: Ac, div_lm: Ac = None, rot_lm: Ac = None
     ):
+        """Compute divergence and curl from vector spherical harmonics uD, uR
+        (``div_lm`` and ``rot_lm`` are overwritten).
+
+        """
         if div_lm is None:
             # div_lm = self.create_array_sh()
             div_lm = np.empty(self.shapeK, complex)
@@ -168,6 +186,10 @@ class OperatorsSphereHarmo2D:
     def vsh_from_divrotsh(
         self, div_lm: Ac, rot_lm: Ac, uD_lm: Ac = None, uR_lm: Ac = None
     ):
+        """Compute VSH from divergence and curl spherical harmonics div_lm,
+        ``rot_lm`` (``uD_lm`` and ``uR_lm`` are overwritten).
+
+        """
         if uD_lm is None:
             # uD_lm = self.create_array_sh()
             uD_lm = np.empty(self.shapeK, complex)

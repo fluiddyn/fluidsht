@@ -45,7 +45,5 @@ Dependencies
 
 - Spherical harmonics libraries
 
-  .. toctree::
-     :maxdepth: 1
 
-     install/sht_libs
+.. include:: install/sht_libs.rst

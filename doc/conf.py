@@ -16,6 +16,12 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+from pkg_resources import parse_version
+import fluidsht as fsh
+from fluiddoc import mock_modules
+import guzzle_sphinx_theme
+
+mock_modules(('shtns',))
 
 # -- Project information -----------------------------------------------------
 
@@ -24,10 +30,10 @@ copyright = '2019, FluidDyn Developers'
 author = 'FluidDyn Developers'
 
 # The short X.Y version
-version = ''
+_version = parse_version(fsh.__version__)
+version = _version.base_version
 # The full version, including alpha/beta/rc tags
-release = '0.0.0a0'
-
+release = _version.public
 
 # -- General configuration ---------------------------------------------------
 
@@ -45,6 +51,9 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
+    # FluidSHT documentation generation
+    'sphinx.ext.autosummary',
+    'numpydoc',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -80,7 +89,8 @@ pygments_style = None
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme_path = guzzle_sphinx_theme.html_theme_path()
+html_theme = 'guzzle_sphinx_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -88,6 +98,10 @@ html_theme = 'alabaster'
 #
 # html_theme_options = {}
 
+html_theme_options = {
+    # Set the name of the project to appear in the sidebar
+    "project_nav_name": "Project Name",
+}
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
@@ -185,3 +199,12 @@ epub_exclude_files = ['search.html']
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
+# -- Other options ---------------------------------------------------------
+
+numpydoc_show_class_members = False
+
+autosummary_generate = True
+
+autodoc_default_options = {"show-inheritance": None}
+autodoc_member_order = 'bysource'
