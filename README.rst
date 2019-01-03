@@ -45,7 +45,7 @@ For a **basic installation** it should be sufficient to run::
 
 You can get the source code from `Bitbucket
 <https://bitbucket.org/fluiddyn/fluidsht>`__ or from `the Python
-Package Index <https://pypi.python.org/pypi/fluidsht/>`__.
+Package Index <https://pypi.org/project/fluidsht/>`__.
 The development mode is often useful if you intend to modify fluidsht . From
 the root directory::
 
