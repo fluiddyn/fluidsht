@@ -43,7 +43,6 @@ options_flags = make_namedtuple_from_module(shtns, "sht_{}", "flags", keys_flags
 
 
 class SHT2DWithSHTns(EasySHT):
-    """This"""
     __doc__ = EasySHT.__doc__
 
     def __init__(

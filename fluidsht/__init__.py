@@ -65,7 +65,8 @@ def import_sht_class(method, raise_import_error=True):
 
 
 def create_sht_object(
-    method, n0=None, n1=None, n2=None, lmax=15, norm=None, grid_type="gaussian"
+    method, n0=None, n1=None, n2=None, lmax=15, norm=None, grid_type="gaussian",
+    radius=1.0
 ):
     """Helper for creating sht objects.
 
@@ -87,7 +88,10 @@ def create_sht_object(
       Normalization factor
 
     grid_type : str
-      Grid to sample from.
+      Grid to sample from
+
+    radius : float
+      Reference radius of the sphere
 
     Returns
     -------
@@ -107,7 +111,7 @@ def create_sht_object(
         raise ValueError("Arguments incompatible")
 
     if n2 is None:
-        return cls(n0, n1, lmax, norm=norm, grid_type=grid_type)
+        return cls(n0, n1, lmax, norm=norm, grid_type=grid_type, radius=radius)
     else:
         raise NotImplementedError
         # return cls(n0, n1, n2, lmax, norm=flags, flags=flags)
