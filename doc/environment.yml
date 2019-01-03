@@ -1,0 +1,14 @@
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.6
+  - ipython
+  - jupyter
+  - pip:
+    - sphinx_guzzle_theme
+    - sphinx
+    - numpydoc
+    - fluiddyn
+    - fluidpythran
