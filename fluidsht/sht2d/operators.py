@@ -78,8 +78,14 @@ class OperatorsSphereHarmo2D:
     inv_K2_r: Af
 
     def __init__(
-        self, nlat=None, nlon=None, lmax=15, norm="fourpi", grid_type="gaussian",
-        radius=1, sht=None
+        self,
+        nlat=None,
+        nlon=None,
+        lmax=15,
+        norm="fourpi",
+        grid_type="gaussian",
+        radius=1,
+        sht=None,
     ):
         if sht is None or sht == "default":
             sht = get_simple_2d_method()
@@ -87,8 +93,13 @@ class OperatorsSphereHarmo2D:
         if isinstance(sht, str):
             if any([sht.startswith(s) for s in ["fluidsht.", "sht2d."]]):
                 opsht = create_sht_object(
-                    sht, nlat, nlon, lmax=lmax, norm=norm, grid_type=grid_type,
-                    radius=radius
+                    sht,
+                    nlat,
+                    nlon,
+                    lmax=lmax,
+                    norm=norm,
+                    grid_type=grid_type,
+                    radius=radius,
                 )
                 print(f"{sht}: nlat={opsht.nlat}, nlon={opsht.nlon}")
             else:

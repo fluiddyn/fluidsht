@@ -4,7 +4,7 @@ from time import time
 
 lmax = 15
 nlat = lmax + 1
-nlon = 2*lmax + 1
+nlon = 2 * lmax + 1
 
 oper = OperatorsSphereHarmo2D(nlat, nlon, lmax)
 optools = SHT2DWithSHTOOLS(nlat, nlon, lmax)
@@ -12,7 +12,7 @@ optools = SHT2DWithSHTOOLS(nlat, nlon, lmax)
 spat = oper.create_array_spat_random()
 print("shapeX =", oper.shapeX)
 print("shapeK =", oper.shapeK)
-print("l_idx.shape=", oper.opsht.l_idx.shape, "= \n" ,  oper.opsht.l_idx)
+print("l_idx.shape=", oper.opsht.l_idx.shape, "= \n", oper.opsht.l_idx)
 
 # print("zeros=\n", optools._grid_coeffs[0])
 # print("weights=\n", optools._grid_coeffs[1])

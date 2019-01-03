@@ -14,22 +14,21 @@ from pyshtools import shtools
 from ..compat import cached_property
 
 Normalization = namedtuple(
-    "normalization", ("orthonormal", "fourpi", "schmidt", "unnormalized"))
+    "normalization", ("orthonormal", "fourpi", "schmidt", "unnormalized")
+)
 options_norm = Normalization(
-    4, 1, 2, 3
+    4,
+    1,
+    2,
+    3
     # "ortho", "4pi", "schmidt", "unnorm"
 )
 # Condon-Shortley phase factor to the associated Legendre functions
-Flags = namedtuple(
-    "flags",
-    ("csphase", "no_csphase")
-)
+Flags = namedtuple("flags", ("csphase", "no_csphase"))
 options_flags = Flags(-1, 1)
 
 
-
 class SHT2DWithSHTOOLS:
-
     def __init__(
         self,
         nlat=None,
@@ -63,8 +62,8 @@ class SHT2DWithSHTOOLS:
             self.nlon = 2 * lmax + 1
         else:
             raise NotImplementedError
-        
-        # TODO: implement the rest using getattr and dictionary 
+
+        # TODO: implement the rest using getattr and dictionary
         if norm == options_norm.fourpi:
             self._Pl = shtools.PlBar
             self._Pl_d1 = shtools.PlBar_d1
@@ -77,7 +76,7 @@ class SHT2DWithSHTOOLS:
 
         self.nlm = (lmax + 1) * (lmax + 2) // 2
         self.shapeK = (self.nlm,)
-        # self.l2_idx = 
+        # self.l2_idx =
 
     @cached_property
     def _grid_coeffs(self):
@@ -89,7 +88,9 @@ class SHT2DWithSHTOOLS:
         if value is None:
             field_lm = np.empty(self.nlm, dtype)
         elif value == "rand":
-            field_lm = np.random.randn(self.nlm) + 1.j * np.random.randn(self.nlm)
+            field_lm = np.random.randn(self.nlm) + 1.0j * np.random.randn(
+                self.nlm
+            )
         elif value == 0:
             field_lm = np.zeros(self.nlm, dtype)
         else:
@@ -113,28 +114,18 @@ class SHT2DWithSHTOOLS:
         """Forward transform from spatial grid to spherical harmonics (analysis)."""
         zeros, weights = self._grid_coeffs
         return self._sht(
-            field,
-            w=weights,
-            zero=zeros,
-            norm=self.norm,
-            csphase=self.flags
+            field, w=weights, zero=zeros, norm=self.norm, csphase=self.flags
         )
 
     def isht(self, field_sh):
         """Inverse transform from spherical harmonics to spatial grid (sythesis)."""
         zeros = self._grid_coeffs[0]
         return self._isht(
-            field_sh,
-            zero=zeros,
-            norm=self.norm,
-            csphase=self.flags
+            field_sh, zero=zeros, norm=self.norm, csphase=self.flags
         ).real
 
-    create_array_spat_random = functools.partialmethod(
-        create_array_spat, "rand"
-    )
-    create_array_sh_random = functools.partialmethod(
-        create_array_sh, "rand"
-    )
+    create_array_spat_random = functools.partialmethod(create_array_spat, "rand")
+    create_array_sh_random = functools.partialmethod(create_array_sh, "rand")
+
 
 SHTclass = SHT2DWithSHTOOLS

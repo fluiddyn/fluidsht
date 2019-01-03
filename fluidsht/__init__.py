@@ -65,8 +65,14 @@ def import_sht_class(method, raise_import_error=True):
 
 
 def create_sht_object(
-    method, n0=None, n1=None, n2=None, lmax=15, norm=None, grid_type="gaussian",
-    radius=1.0
+    method,
+    n0=None,
+    n1=None,
+    n2=None,
+    lmax=15,
+    norm=None,
+    grid_type="gaussian",
+    radius=1.0,
 ):
     """Helper for creating sht objects.
 
