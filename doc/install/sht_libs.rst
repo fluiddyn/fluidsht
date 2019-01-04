@@ -59,6 +59,12 @@ Installation is possible as::
     autoconf
     ./configure --enable-pic
     make -j
+
+    # Run tests - optional
+    pip install nose
+    make pytest
+
+    # Install
     cd python
     LIBSHARP=../auto python setup.py install
 

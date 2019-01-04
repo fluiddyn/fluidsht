@@ -15,7 +15,7 @@ from ..compat import cached_property
 # pythran import numpy as np
 
 Ai = "int32[]"
-Af = "float64[:]"
+Af = "float64[:, :]"
 Ac = "complex128[:]"
 
 
@@ -118,6 +118,10 @@ class OperatorsSphereHarmo2D:
         for attr in (
             "nlat",
             "nlon",
+            "lats",
+            "lons",
+            "LATS",
+            "LONS",
             "shapeX",
             "shapeK",
             "l2_idx",  # l(l+1)
