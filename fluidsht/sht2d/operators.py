@@ -264,7 +264,7 @@ class OperatorsSphereHarmo2D:
         uD_lm = div_lm
         uR_lm = rot_lm
 
-        self.vsh_from_vec(v, u, uD_lm, uR_lm)
+        self.vsh_from_vec(u, v, uD_lm, uR_lm)
         return self.divrotsh_from_vsh(
             uD_lm, uR_lm, div_lm, rot_lm  # Inputs  # Buffers to be overwritten
         )
