@@ -73,7 +73,7 @@ facilitate SHT and related operators, very similar to `FluidFFT
 
 - `SHTns <https://users.isterre.fr/nschaeff/SHTns/>`_
 
-- `SHTOOLS <https://https://shtools.oca.eu/shtools/>`_
+- `SHTOOLS <https://shtools.oca.eu/shtools/>`_
 
 - `libsharp <https://github.com/Libsharp/libsharp>`_
 

@@ -122,8 +122,14 @@ class OperatorsSphereHarmo2D:
             "lons",
             "LATS",
             "LONS",
+            "deltax",
+            "deltay",  # FIXME: deltay
             "shapeX",
+            "shapeX_loc",
+            "shapeX_seq",
             "shapeK",
+            "shapeK_loc",
+            "shapeK_seq",
             "l2_idx",  # l(l+1)
             "radius",
             "K2",
@@ -152,6 +158,13 @@ class OperatorsSphereHarmo2D:
             "vsh_from_vec",
             # Gradient
             "gradf_from_fsh",
+            # Misc.
+            "dealiasing",  # FIXME: Implement properly
+            # Post-processing
+            "sum_wavenumbers",
+            # Informational
+            "produce_str_describing_oper",
+            "produce_long_str_describing_oper",
         ):
             self.copyattr(method)
 
