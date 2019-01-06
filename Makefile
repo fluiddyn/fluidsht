@@ -13,7 +13,7 @@ clean_pyc:
 	find fluidsht -name "__pycache__" -type d | xargs rm -rf
 
 cleanpythran:
-	fluidpythran -cc fluidsht.sht2d.operators
+	find fluidsht -name "__pythran__" -type d | xargs rm -rf
 
 clean: clean_pyc
 	rm -rf build dist

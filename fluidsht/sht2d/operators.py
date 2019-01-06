@@ -14,9 +14,9 @@ from ..compat import cached_property
 
 # pythran import numpy as np
 
-Ai = "int32[]"
-Af = "float64[:, :]"
+Af = "float64[:]"
 Ac = "complex128[:]"
+Ac_optional = "complex128[:] or None"
 
 
 def get_simple_2d_method() -> str:
@@ -73,7 +73,7 @@ class OperatorsSphereHarmo2D:
 
     where, :math:`\Delta = \nabla^2 :=` Laplacian operator.
     """
-    shapeK: Ai
+    nlm: int
     K2_r: Af
     inv_K2_r: Af
 
@@ -130,13 +130,20 @@ class OperatorsSphereHarmo2D:
             "shapeK",
             "shapeK_loc",
             "shapeK_seq",
+            "nlm",
             "l2_idx",  # l(l+1)
             "radius",
             "K2",
+            "K4",
+            "K8",
             "K2_not0",
             "_zeros_sh",
         ):
             self.copyattr(attr)
+
+        # for fluidsim plotting
+        self.x_seq = self.lons
+        self.y_seq = self.lats
 
         self.lmax = lmax
         self.norm = norm
@@ -189,10 +196,9 @@ class OperatorsSphereHarmo2D:
         with suppress(AttributeError):
             setattr(self, attr, getattr(self.opsht, attr))
 
-    # FIXME: default arguments does not work
-    # @boost
+    @boost
     def divrotsh_from_vsh(
-        self, uD_lm: Ac, uR_lm: Ac, div_lm: Ac = None, rot_lm: Ac = None
+        self, uD_lm: Ac, uR_lm: Ac, div_lm: Ac_optional = None, rot_lm: Ac_optional = None
     ):
         """Compute divergence and curl from vector spherical harmonics uD, uR
         (``div_lm`` and ``rot_lm`` are overwritten).
@@ -200,20 +206,19 @@ class OperatorsSphereHarmo2D:
         """
         if div_lm is None:
             # div_lm = self.create_array_sh()
-            div_lm = np.empty(self.shapeK, complex)
+            div_lm = np.empty(self.nlm, complex)
 
         if rot_lm is None:
             # rot_lm = self.create_array_sh()
-            rot_lm = np.empty(self.shapeK, complex)
+            rot_lm = np.empty(self.nlm, complex)
 
         div_lm[:] = -self.K2_r * uD_lm
         rot_lm[:] = self.K2_r * uR_lm
         return div_lm, rot_lm
 
-    # FIXME: default arguments does not work
-    # @boost
+    @boost
     def vsh_from_divrotsh(
-        self, div_lm: Ac, rot_lm: Ac, uD_lm: Ac = None, uR_lm: Ac = None
+        self, div_lm: Ac, rot_lm: Ac, uD_lm: Ac_optional = None, uR_lm: Ac_optional = None
     ):
         """Compute VSH from divergence and curl spherical harmonics div_lm,
         ``rot_lm`` (``uD_lm`` and ``uR_lm`` are overwritten).
@@ -221,11 +226,11 @@ class OperatorsSphereHarmo2D:
         """
         if uD_lm is None:
             # uD_lm = self.create_array_sh()
-            uD_lm = np.empty(self.shapeK, complex)
+            uD_lm = np.empty(self.nlm, complex)
 
         if uR_lm is None:
             # uR_lm = self.create_array_sh()
-            uR_lm = np.empty(self.shapeK, complex)
+            uR_lm = np.empty(self.nlm , complex)
 
         uD_lm[:] = -div_lm * self.inv_K2_r
         uR_lm[:] = rot_lm * self.inv_K2_r
