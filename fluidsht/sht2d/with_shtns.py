@@ -7,6 +7,7 @@
 
 """
 import functools
+import numpy as np
 
 # to get a clear ImportError in case...
 import shtns
@@ -43,7 +44,16 @@ options_flags = make_namedtuple_from_module(shtns, "sht_{}", "flags", keys_flags
 
 
 class SHT2DWithSHTns(EasySHT):
-    __doc__ = EasySHT.__doc__
+    __doc__ = EasySHT.__doc__ + """
+
+    - grid_type : str, {"gaussian", "regular"}
+
+    - cs_phase : bool, optional, default = False
+
+        Default = do not apply the Condon-Shortley phase factor to the
+        associated Legendre functions;
+
+    """
 
     def __init__(
         self,
@@ -53,6 +63,7 @@ class SHT2DWithSHTns(EasySHT):
         mmax=None,
         mres=1,
         norm=None,
+        cs_phase=False,
         flags=0,
         polar_opt=1.0e-8,
         nl_order=2,
@@ -61,6 +72,11 @@ class SHT2DWithSHTns(EasySHT):
     ):
         if isinstance(norm, str):
             norm = getattr(options_norm, norm)
+        elif norm is None:
+            norm = options_norm.orthonormal
+
+        if not cs_phase:
+            norm += options_flags.no_cs_phase
 
         if grid_type == "gaussian":
             flags = (
@@ -81,6 +97,11 @@ class SHT2DWithSHTns(EasySHT):
         super().__init__(
             lmax, mmax, mres, norm, nlat, nlon, flags, polar_opt, nl_order, radius
         )
+
+        # Some overrides
+        # angles should be represented in radians by default
+        for attr in (self.lats, self.lons, self.LATS, self.LONS):
+            np.deg2rad(attr, out=attr)
 
     # functions for 2D vectorial spherical harmonic transforms
 

@@ -52,7 +52,21 @@ class OperatorsSphereHarmo2D:
 
     lmax : int
 
-      Truncation degree
+      Truncation degree.
+
+    norm : str
+
+      Normalization for SHT transforms. See ``options_norm`` in the respective
+      modules for available options.
+
+    cs_phase : bool
+
+      Disable (default) or enables the Condon-Shortley phase factor to the
+      associated Legendre functions;
+
+    radius : float
+
+      Radius of the sphere
 
     sht: str or SHT classes
 
@@ -82,7 +96,8 @@ class OperatorsSphereHarmo2D:
         nlat=None,
         nlon=None,
         lmax=15,
-        norm="fourpi",
+        norm="orthonormal",
+        cs_phase=False,
         grid_type="gaussian",
         radius=1,
         sht=None,
@@ -98,6 +113,7 @@ class OperatorsSphereHarmo2D:
                     nlon,
                     lmax=lmax,
                     norm=norm,
+                    cs_phase=False,
                     grid_type=grid_type,
                     radius=radius,
                 )
@@ -147,6 +163,7 @@ class OperatorsSphereHarmo2D:
 
         self.lmax = lmax
         self.norm = norm
+        self.cs_phase = cs_phase
         self.grid_type = grid_type
 
         for method in (

@@ -70,9 +70,8 @@ def create_sht_object(
     n1=None,
     n2=None,
     lmax=15,
-    norm=None,
-    grid_type="gaussian",
-    radius=1.0,
+    *args,
+    **kwargs,
 ):
     """Helper for creating sht objects.
 
@@ -89,15 +88,6 @@ def create_sht_object(
 
     lmax : int
       Truncation degree
-
-    norm : str
-      Normalization factor
-
-    grid_type : str
-      Grid to sample from
-
-    radius : float
-      Reference radius of the sphere
 
     Returns
     -------
@@ -117,7 +107,7 @@ def create_sht_object(
         raise ValueError("Arguments incompatible")
 
     if n2 is None:
-        return cls(n0, n1, lmax, norm=norm, grid_type=grid_type, radius=radius)
+        return cls(n0, n1, lmax, *args, **kwargs)
     else:
         raise NotImplementedError
-        # return cls(n0, n1, n2, lmax, norm=flags, flags=flags)
+        # return cls(n0, n1, n2, lmax, *args, **kwargs)
