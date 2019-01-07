@@ -266,11 +266,19 @@ class OperatorsSphereHarmo2D:
         uD_lm, uR_lm = self.vsh_from_divrotsh(div_lm, rot_lm)
         return self.vec_from_vsh(uD_lm, uR_lm, u, v)
 
-    def vec_from_rotsh(self, rot_sh):
-        return self.vec_from_divrotsh(self._zeros_sh, rot_sh)
+    def vec_from_rotsh(self, rot_sh, u=None, v=None):
+        """Velocities u, v from vertical vorticity alone (u and v are
+        overwritten).
 
-    def vec_from_divsh(self, div_sh):
-        return self.vec_from_divrotsh(div_sh, self._zeros_sh)
+        """
+        return self.vec_from_divrotsh(self._zeros_sh, rot_sh, u, v)
+
+    def vec_from_divsh(self, div_sh, u=None, v=None):
+        """Velocities u, v from horizontal divergence alone (u and v are
+        overwritten).
+
+        """
+        return self.vec_from_divrotsh(div_sh, self._zeros_sh, u, v)
 
     def divrotsh_from_vec(self, u, v, div_lm=None, rot_lm=None):
         """Compute horizontal divergence, and vertical vorticity from u, v
