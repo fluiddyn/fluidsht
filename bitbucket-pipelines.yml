@@ -15,7 +15,7 @@ pipelines:
               - pip
             script:
               - pip install -U tox --user
-              - tox -e py36,codecov
+              - tox -vv -e py36,codecov
         - step:
             image: fluiddyn/python3-stable
             caches:
@@ -31,7 +31,7 @@ pipelines:
               - pip
             script:
               - pip install -U tox --user
-              - tox -e py36,codecov
+              - tox -vv -e py36,codecov
         - step:
             image: fluiddyn/python3-stable
             caches:
