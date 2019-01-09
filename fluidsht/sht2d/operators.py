@@ -88,6 +88,8 @@ class OperatorsSphereHarmo2D:
     where, :math:`\Delta = \nabla^2 :=` Laplacian operator.
     """
     nlm: int
+    K2: Af
+    inv_K2_not0: Af
     K2_r: Af
     inv_K2_r: Af
 
