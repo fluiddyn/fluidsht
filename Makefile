@@ -23,7 +23,7 @@ cleanpythran:
 cleanall: clean clean_pyc cleanpythran
 
 shortlog:
-	@hg log -r$(RELEASE): --template "- {desc|firstline} ({node|short})\n"
+	@hg log -M -r$(RELEASE): --template "- {desc|firstline} ({node|short})\n"
 
 deploy: cleanall
 	python setup.py sdist

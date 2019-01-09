@@ -57,7 +57,6 @@ Tests
 From the root directory::
 
   make tests
-  make tests_mpi
 
 Or, from the root directory or any of the "test" directories::
 
@@ -67,8 +66,8 @@ How does it work?
 -----------------
 
 For the uninitiated, SHT is the spherical coordinates equivalent of FFT for
-cartesian coordinates. This package provides Python wrapper classes to
-facilitate SHT and related operators, very similar to `FluidFFT
+cartesian coordinates. The aim of this package is to provides Python wrapper
+classes to facilitate SHT and related operators, very similar to `FluidFFT
 <http://fluidfft.readthedocs.org>`_, using various libraries such as:
 
 - `SHTns <https://users.isterre.fr/nschaeff/SHTns/>`_
