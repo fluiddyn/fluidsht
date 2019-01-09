@@ -63,6 +63,8 @@ class TestOperators2D(unittest.TestCase):
     def test_sht_isht(self):
         self.assert_reversible(self.arrays_spat[0], "sht", "isht")
 
+    def test_laplacian_invlaplacian(self):
+        self.assert_reversible(self.arrays_sh[0], "laplacian_sh", "invlaplacian_sh")
 
 @unittest.SkipTest
 class TestOperators2DWithSHTOOLS(TestOperators2D):

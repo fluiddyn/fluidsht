@@ -214,6 +214,16 @@ class OperatorsSphereHarmo2D:
             setattr(self, attr, getattr(self.opsht, attr))
 
     @boost
+    def laplacian_sh(self, a_sh: Ac):
+        """Compute the n-th order Laplacian."""
+        return a_sh * self.K2_r
+
+    @boost
+    def invlaplacian_sh(self, a_sh: Ac):
+        """Compute the n-th order inverse Laplacian."""
+        return a_sh * self.inv_K2_r
+
+    @boost
     def divrotsh_from_vsh(
         self, uD_lm: Ac, uR_lm: Ac, div_lm: Ac_optional = None, rot_lm: Ac_optional = None
     ):
