@@ -10,6 +10,9 @@ develop:
 install:
 	pip install -v .
 
+clean:
+	rm -rf build dist
+
 clean_pyc:
 	find fluidsht -name "*.pyc" -delete
 	find fluidsht -name "__pycache__" -type d | xargs rm -rf
@@ -17,13 +20,12 @@ clean_pyc:
 cleanpythran:
 	find fluidsht -name "__pythran__" -type d | xargs rm -rf
 
-clean: clean_pyc
-	rm -rf build dist
+cleanall: clean clean_pyc cleanpythran
 
 shortlog:
 	@hg log -r$(RELEASE): --template "- {desc|firstline} ({node|short})\n"
 
-deploy: clean
+deploy: cleanall
 	python setup.py sdist
 	# python setup.py bdist_wheel
 	twine upload dist/*
