@@ -1,3 +1,5 @@
+# Second tag after tip is usually the latest release
+RELEASE=$(shell hg tags -T "{node|short}\n" | sed -n 2p)
 
 help:
 	@echo "targets: develop and install"
@@ -17,6 +19,9 @@ cleanpythran:
 
 clean: clean_pyc
 	rm -rf build dist
+
+shortlog:
+	@hg log -r$(RELEASE): --template "- {desc|firstline} ({node|short})\n"
 
 deploy: clean
 	python setup.py sdist

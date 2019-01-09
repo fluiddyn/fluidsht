@@ -33,6 +33,15 @@ use FluidSHT:
    fluidsht.sht2d
 
 
+More
+====
+
+.. toctree::
+   :maxdepth: 1
+
+   changes
+
+
 Indices and tables
 ==================
 
