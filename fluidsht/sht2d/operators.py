@@ -222,14 +222,39 @@ class OperatorsSphereHarmo2D:
             setattr(self, attr, getattr(self.opsht, attr))
 
     @boost
-    def laplacian_sh(self, a_sh: Ac):
-        """Compute the n-th order Laplacian."""
-        return a_sh * self.K2
+    def laplacian_sh(self, a_lm: Ac, negative: bool=False):
+        r"""Compute the Laplacian, :math:`\nabla^{n} a^{lm}`
+
+        Parameters
+        ----------
+        a_lm : ndarray
+
+        negative: bool, optional
+            Negative of the result.
+
+        """
+        if negative:
+            return self.K2 * a_lm
+        else:
+            return -self.K2 * a_lm
+
 
     @boost
-    def invlaplacian_sh(self, a_sh: Ac):
-        """Compute the n-th order inverse Laplacian."""
-        return a_sh * self.inv_K2_not0
+    def invlaplacian_sh(self, a_lm: Ac, negative: bool=False):
+        r"""Compute the Laplacian, :math:`\nabla^{n} a^{lm}`
+
+        Parameters
+        ----------
+        a_lm : ndarray
+
+        negative: bool, optional
+            Negative of the result.
+
+        """
+        if negative:
+            return self.inv_K2_not0 * a_lm
+        else:
+            return -self.inv_K2_not0 * a_lm
 
     @boost
     def divrotsh_from_vsh(
@@ -255,7 +280,7 @@ class OperatorsSphereHarmo2D:
     def vsh_from_divrotsh(
         self, div_lm: Ac, rot_lm: Ac, uD_lm: Ac_optional = None, uR_lm: Ac_optional = None
     ):
-        """Compute VSH from divergence and curl spherical harmonics div_lm,
+        """Compute VSH from divergence and curl spherical harmonics ``div_lm``,
         ``rot_lm`` (``uD_lm`` and ``uR_lm`` are overwritten).
 
         """
