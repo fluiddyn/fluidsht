@@ -1,7 +1,7 @@
 import unittest
 from warnings import warn
 import numpy as np
-from numpy.testing import assert_array_almost_equal
+from numpy.testing import assert_array_almost_equal, assert_array_less
 from fluidsht.sht2d.operators import OperatorsSphereHarmo2D
 
 
@@ -46,6 +46,17 @@ class TestOperators2D(unittest.TestCase):
         arrays_out = inverse(*as_iterable(arrays_transformed))
 
         assert_array_almost_equal(arrays_in, arrays_out)
+
+    def test_not0(self):
+        """Arrays which are expected to have small values when :math:`l(l+1) == 0`."""
+        oper = self.oper
+        COND = oper.l2_idx == 0
+        for attr in ("K2_not0", "inv_K2_not0", "inv_K2_r"):
+            array = getattr(oper, attr)
+            try:
+                assert_array_less(array[COND], 1e-14)
+            except AssertionError:
+                raise AssertionError(f"Array {attr} is non-negligible where it should be.")
 
     def test_transform_vec_vsh(self):
         self.assert_reversible(self.arrays_spat, "vsh_from_vec", "vec_from_vsh")

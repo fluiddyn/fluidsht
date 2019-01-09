@@ -193,14 +193,20 @@ class OperatorsSphereHarmo2D:
             self.copyattr(method)
 
     @cached_property
+    def inv_K2_not0(self):
+        inv_K2_not0 = 1.0 / self.K2_not0
+        inv_K2_not0[self.l2_idx == 0] = 0.0
+        return inv_K2_not0
+
+    @cached_property
     def K2_r(self):
+        r"""Compute :math:`r \Delta = [l(l+1)] / r`"""
         return self.l2_idx / self.radius
 
     @cached_property
     def inv_K2_r(self):
-        inv_K2_r = 1.0 / (self.radius * self.K2_not0)
-        # inv_K2_r[0] = 0.0
-        return inv_K2_r
+        r"""Compute :math:`(r \Delta)^{-1} = r / [l(l+1)]`"""
+        return self.inv_K2_not0 / self.radius
 
     @cached_property
     def where_l2_idx_positive(self):
@@ -216,12 +222,12 @@ class OperatorsSphereHarmo2D:
     @boost
     def laplacian_sh(self, a_sh: Ac):
         """Compute the n-th order Laplacian."""
-        return a_sh * self.K2_r
+        return a_sh * self.K2
 
     @boost
     def invlaplacian_sh(self, a_sh: Ac):
         """Compute the n-th order inverse Laplacian."""
-        return a_sh * self.inv_K2_r
+        return a_sh * self.inv_K2_not0
 
     @boost
     def divrotsh_from_vsh(
