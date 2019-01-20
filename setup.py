@@ -1,9 +1,9 @@
 import os
+import sys
 from runpy import run_path
 from pathlib import Path
 
-from setuptools import setup, find_packages
-from fluidpythran.dist import make_pythran_files
+from setuptools import setup
 
 from config import fluidsht_build_ext, make_pythran_extensions, use_pythran
 
@@ -17,11 +17,14 @@ __about__ = d["__about__"]
 
 print(__about__)
 
-paths = ["fluidsht/sht2d/operators.py"]
-make_pythran_files(
-    [here / path for path in paths],
-    mocked_modules=("cached_property",),
-)
+if "egg_info" not in sys.argv:
+    from transonic.dist import make_backend_files
+
+    paths = ["fluidsht/sht2d/operators.py"]
+    make_backend_files(
+        [here / path for path in paths],
+        mocked_modules=("cached_property",),
+    )
 
 
 ext_modules = []

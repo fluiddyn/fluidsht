@@ -31,7 +31,7 @@
    :alt: Binder notebook
 
 A Python package to provide a unified API to perform `Spherical Harmonic
-Transforms (SHT) <https://en.wikipedia.org/wiki/Spherical_harmonics>`_. 
+Transforms (SHT) <https://en.wikipedia.org/wiki/Spherical_harmonics>`_.
 
 **Documentation**: https://fluidsht.readthedocs.io
 
@@ -40,13 +40,13 @@ Getting started
 
 For a **basic installation** it should be sufficient to run::
 
-  pip install fluidpythran fluiddyn [--user]
+  pip install fluiddyn [--user]
   pip install fluidsht [--user]
 
 You can get the source code from `Bitbucket
 <https://bitbucket.org/fluiddyn/fluidsht>`__ or from `the Python
 Package Index <https://pypi.org/project/fluidsht/>`__.
-The development mode is often useful if you intend to modify fluidsht . From
+The development mode is often useful if you intend to modify fluidsht. From
 the root directory::
 
   pip install -e .

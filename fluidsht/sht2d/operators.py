@@ -8,11 +8,11 @@
 """
 from contextlib import suppress
 import numpy as np
-from fluidpythran import boost
+from transonic import boost
 from .. import create_sht_object
 from ..compat import cached_property
 
-# pythran import numpy as np
+# transonic import numpy as np
 
 Af = "float64[:]"
 Ac = "complex128[:]"

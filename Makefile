@@ -1,11 +1,11 @@
 # Second tag after tip is usually the latest release
 RELEASE=$(shell hg tags -T "{node|short}\n" | sed -n 2p)
 
-help:
-	@echo "targets: develop and install"
-
 develop:
 	pip install -ve .
+
+help:
+	@echo "targets: develop and install"
 
 install:
 	pip install -v .

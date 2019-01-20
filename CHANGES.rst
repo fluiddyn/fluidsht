@@ -18,5 +18,4 @@ Minor changes
 - Apply black, version 18.9b0 (323291f150f7)
 - Use hg versions of fluiddyn, fluidpythran (762695f32a14)
 - Tox, be more verbose (ec7136dbddcc)
-- Tox FLUIDPYTHRAN_NO_REPLACE to improve coverage (76e217792235)
-
+- Tox TRANSONIC_NO_REPLACE to improve coverage (76e217792235)

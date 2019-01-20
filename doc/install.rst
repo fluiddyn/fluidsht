@@ -10,19 +10,9 @@ Dependencies
 
 - Numpy
 
-  Make sure to correctly install numpy before anything. 
+  Make sure to correctly install numpy before anything.
 
-  .. note::
-
-     Be careful, the wheels install with `pip install numpy` can be slow. You
-     might get something more efficient by compiling from source using:
-
-     .. code:: bash
-
-        pip install numpy --no-binary numpy
-        python -c 'import numpy; numpy.test()'
-
-- `FluidPythran <https://fluidpythran.readthedocs.io>`_
+- `Transonic <https://transonic.readthedocs.io>`_
 
 - `Pythran <https://github.com/serge-sans-paille/pythran>`_
 
