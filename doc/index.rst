@@ -40,6 +40,7 @@ More
    :maxdepth: 1
 
    changes
+   authors
 
 
 Indices and tables
