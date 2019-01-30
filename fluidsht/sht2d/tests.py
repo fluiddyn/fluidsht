@@ -56,7 +56,9 @@ class TestOperators2D(unittest.TestCase):
             try:
                 assert_array_less(array[COND], 1e-14)
             except AssertionError:
-                raise AssertionError(f"Array {attr} is non-negligible where it should be.")
+                raise AssertionError(
+                    f"Array {attr} is non-negligible where it should be."
+                )
 
     def test_transform_vec_vsh(self):
         self.assert_reversible(self.arrays_spat, "vsh_from_vec", "vec_from_vsh")
@@ -75,7 +77,10 @@ class TestOperators2D(unittest.TestCase):
         self.assert_reversible(self.arrays_spat[0], "sht", "isht")
 
     def test_laplacian_invlaplacian(self):
-        self.assert_reversible(self.arrays_sh[0], "laplacian_sh", "invlaplacian_sh")
+        self.assert_reversible(
+            self.arrays_sh[0], "laplacian_sh", "invlaplacian_sh"
+        )
+
 
 @unittest.SkipTest
 class TestOperators2DWithSHTOOLS(TestOperators2D):

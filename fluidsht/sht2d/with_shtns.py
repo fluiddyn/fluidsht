@@ -44,7 +44,9 @@ options_flags = make_namedtuple_from_module(shtns, "sht_{}", "flags", keys_flags
 
 
 class SHT2DWithSHTns(EasySHT):
-    __doc__ = EasySHT.__doc__ + """
+    __doc__ = (
+        EasySHT.__doc__
+        + """
 
     - grid_type : str, {"gaussian", "regular"}
 
@@ -54,6 +56,7 @@ class SHT2DWithSHTns(EasySHT):
         associated Legendre functions;
 
     """
+    )
 
     def __init__(
         self,

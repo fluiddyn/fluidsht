@@ -222,7 +222,7 @@ class OperatorsSphereHarmo2D:
             setattr(self, attr, getattr(self.opsht, attr))
 
     @boost
-    def laplacian_sh(self, a_lm: Ac, negative: bool=False):
+    def laplacian_sh(self, a_lm: Ac, negative: bool = False):
         r"""Compute the Laplacian, :math:`\nabla^{n} a^{lm}`
 
         Parameters
@@ -238,9 +238,8 @@ class OperatorsSphereHarmo2D:
         else:
             return -self.K2 * a_lm
 
-
     @boost
-    def invlaplacian_sh(self, a_lm: Ac, negative: bool=False):
+    def invlaplacian_sh(self, a_lm: Ac, negative: bool = False):
         r"""Compute the Laplacian, :math:`\nabla^{n} a^{lm}`
 
         Parameters
@@ -258,7 +257,11 @@ class OperatorsSphereHarmo2D:
 
     @boost
     def divrotsh_from_vsh(
-        self, uD_lm: Ac, uR_lm: Ac, div_lm: Ac_optional = None, rot_lm: Ac_optional = None
+        self,
+        uD_lm: Ac,
+        uR_lm: Ac,
+        div_lm: Ac_optional = None,
+        rot_lm: Ac_optional = None,
     ):
         """Compute divergence and curl from vector spherical harmonics uD, uR
         (``div_lm`` and ``rot_lm`` are overwritten).
@@ -278,7 +281,11 @@ class OperatorsSphereHarmo2D:
 
     @boost
     def vsh_from_divrotsh(
-        self, div_lm: Ac, rot_lm: Ac, uD_lm: Ac_optional = None, uR_lm: Ac_optional = None
+        self,
+        div_lm: Ac,
+        rot_lm: Ac,
+        uD_lm: Ac_optional = None,
+        uR_lm: Ac_optional = None,
     ):
         """Compute VSH from divergence and curl spherical harmonics ``div_lm``,
         ``rot_lm`` (``uD_lm`` and ``uR_lm`` are overwritten).
@@ -290,7 +297,7 @@ class OperatorsSphereHarmo2D:
 
         if uR_lm is None:
             # uR_lm = self.create_array_sh()
-            uR_lm = np.empty(self.nlm , complex)
+            uR_lm = np.empty(self.nlm, complex)
 
         uD_lm[:] = -div_lm * self.inv_K2_r
         uR_lm[:] = rot_lm * self.inv_K2_r
