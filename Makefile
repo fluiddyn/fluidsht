@@ -2,13 +2,10 @@
 RELEASE=$(shell hg tags -T "{node|short}\n" | sed -n 2p)
 
 develop:
-	pip install -ve .
+	pip install -ve . | grep -v link
 
 help:
-	@echo "targets: develop and install"
-
-install:
-	pip install -v .
+	@echo "targets: cleanall and develop"
 
 clean:
 	rm -rf build dist

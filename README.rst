@@ -40,7 +40,6 @@ Getting started
 
 For a **basic installation** it should be sufficient to run::
 
-  pip install fluiddyn [--user]
   pip install fluidsht [--user]
 
 You can get the source code from `Bitbucket
