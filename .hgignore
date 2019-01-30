@@ -17,6 +17,7 @@ doc/**.zip
 build/*
 dist/*.tar.gz
 dist*
+.eggs
 .tox/*
 .coverage/*
 

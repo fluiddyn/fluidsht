@@ -1,3 +1,14 @@
+0.0.3a0 (2018-01-31)
+--------------------
+
+- Bye bye fluidpythran, hello transonic (238efcbcb574)
+- Rewrite setup using transonic>0.1.9 (8840f876c728)
+
+Minor changes
+~~~~~~~~~~~~~
+
+- Clarify readme, add authors (62021bfda8e1, 8de7f39a56a5)
+
 0.0.2a0
 -------
 
