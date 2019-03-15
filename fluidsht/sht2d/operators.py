@@ -12,7 +12,6 @@ from transonic import boost
 from .. import create_sht_object
 from ..compat import cached_property
 
-# transonic import numpy as np
 
 Af = "float64[:]"
 Ac = "complex128[:]"
@@ -174,22 +173,16 @@ class OperatorsSphereHarmo2D:
             "create_array_spat_random",
             "create_array_sh",
             "create_array_sh_random",
-            # Generic transformations
-            "sht",
+            "sht",  # Generic transformations
             "isht",
             "sht_as_arg",
             "isht_as_arg",
-            # Velocity vector <-> Spherical Harmonics transformations methods
-            "vec_from_vsh",
+            "vec_from_vsh",  # Velocity vector <-> Spherical Harmonics transformations methods
             "vsh_from_vec",
-            # Gradient
-            "gradf_from_fsh",
-            # Misc.
-            "dealiasing",  # FIXME: Implement properly
-            # Post-processing
-            "sum_wavenumbers",
-            # Informational
-            "produce_str_describing_oper",
+            "gradf_from_fsh",  # Gradient
+            "dealiasing",  # Gradient  # FIXME: Implement properly
+            "sum_wavenumbers",  # Post-processing
+            "produce_str_describing_oper",  # Informational
             "produce_long_str_describing_oper",
         ):
             self.copyattr(method)

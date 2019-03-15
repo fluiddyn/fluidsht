@@ -39,10 +39,7 @@ def trasonize():
     from transonic.dist import make_backend_files
 
     paths = ["fluidsht/sht2d/operators.py"]
-    make_backend_files(
-        [here / path for path in paths],
-        mocked_modules=("cached_property",),
-    )
+    make_backend_files([here / path for path in paths])
 
 
 def create_extensions():
@@ -61,7 +58,7 @@ def create_extensions():
         "fluidsht",
         include_dirs=np.get_include(),
         compile_args=("-O3", "-march={}".format(compile_arch), "-DUSE_XSIMD"),
-        logger=logger
+        logger=logger,
     )
     logger.debug("Extensions: {}".format(extensions))
     return extensions
