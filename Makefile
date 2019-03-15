@@ -45,4 +45,6 @@ coverage: _tests_coverage _report_coverage
 
 black:
 	black -l 82 fluidsht
+
+black_commit: black
 	hg commit -m "Apply $(shell black --version)"
