@@ -173,16 +173,22 @@ class OperatorsSphereHarmo2D:
             "create_array_spat_random",
             "create_array_sh",
             "create_array_sh_random",
-            "sht",  # Generic transformations
+            # Generic transformations
+            "sht",
             "isht",
             "sht_as_arg",
             "isht_as_arg",
-            "vec_from_vsh",  # Velocity vector <-> Spherical Harmonics transformations methods
+            # Velocity vector <-> Spherical Harmonics transformations methods
+            "vec_from_vsh",
             "vsh_from_vec",
-            "gradf_from_fsh",  # Gradient
-            "dealiasing",  # Gradient  # FIXME: Implement properly
-            "sum_wavenumbers",  # Post-processing
-            "produce_str_describing_oper",  # Informational
+            # Gradient
+            "gradf_from_fsh",
+            # Misc.
+            "dealiasing",  # FIXME: Implement properly
+            # Post-processing
+            "sum_wavenumbers",
+            # Informational
+            "produce_str_describing_oper",
             "produce_long_str_describing_oper",
         ):
             self.copyattr(method)
