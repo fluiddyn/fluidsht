@@ -10,6 +10,8 @@ Mathematical details
 
 - `Python notebooks - examples and tutorials - SHTOOLS <https://shtools.oca.eu/shtools/python-examples.html>`_
 
+- `A New Recurrence Formula for Efficient Computation of Spherical Harmonic Transform - K. Ishioka <https://doi.org/10.2151/jmsj.2018-019>`_
+
 Wikipedia articles
 ~~~~~~~~~~~~~~~~~~
 
@@ -20,7 +22,7 @@ Wikipedia articles
 CFD with spherical coordinates
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- `Quickstart Guide: Idealized Global Atmospheric Models with Spectral Dynamics - GFDL/NOAA <https://www.gfdl.noaa.gov/idealized-spectral-models-quickstart>`_ 
+- `Quickstart Guide: Idealized Global Atmospheric Models with Spectral Dynamics - GFDL/NOAA <https://www.gfdl.noaa.gov/idealized-spectral-models-quickstart>`_
   Alternate link from `web archive
   <https://web.archive.org/web/20170513055132/https://www.gfdl.noaa.gov/idealized-spectral-models-quickstart/>`_.
 

@@ -68,5 +68,10 @@ Installation is possible as::
     cd python
     LIBSHARP=../auto python setup.py install
 
-However due to lack of documentation it is hard (not impossible) to implement
-an API bridge.
+
+.. note::
+
+  Due to lack of documentation it is hard (not impossible) to implement
+  an API bridge. The development of libsharp seems to have resumed recently
+  and it looks promising. Now it uses pybind11:
+  https://gitlab.mpcdf.mpg.de/mtr/libsharp/
