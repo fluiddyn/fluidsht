@@ -1,3 +1,17 @@
+
+0.0.4a0 (2018-01-31)
+--------------------
+
+- Revert a quick fix for Transonic now that it is no longer needed (:rev:`5a1d02ac573b`)
+- Use SHTNS v3.3.1 (:rev:`03c916d0414e`)
+
+Minor changes
+~~~~~~~~~~~~~
+
+- Use sphinx_rtd_theme for docs (:rev:`d048819fa1da`)
+- Doc: libsharp update, Ishioka 2018 (:rev:`116753abd55c`)
+- Fix tox and CI (:rev:`57369e5dfba3`, :rev:`b1313c3d0cb8`, :rev:`a5820ed697b3`)
+
 0.0.3a0 (2018-01-31)
 --------------------
 
