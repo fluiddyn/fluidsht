@@ -75,3 +75,16 @@ Installation is possible as::
   an API bridge. The development of libsharp seems to have resumed recently
   and it looks promising. Now it uses pybind11:
   https://gitlab.mpcdf.mpg.de/mtr/libsharp/
+
+The new library `pysharp` can be installed as follows::
+
+  git clone https://gitlab.mpcdf.mpg.de/mtr/libsharp
+  cd libsharp
+  autoreconf -i
+  CC=mpicc CFLAGS="-DUSE_MPI -std=c99 -O3 -march=native -ffast-math" ./configure
+  make- j
+
+  # Install
+  cd python
+  LDFLAGS="-L../.libs/" python setup.py install
+  export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$(realpath ../.libs)"

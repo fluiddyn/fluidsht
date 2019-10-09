@@ -33,3 +33,5 @@ doc/ipynb/*.rst
 
 **/__pythran__/
 
+libsharp/
+shtns/
