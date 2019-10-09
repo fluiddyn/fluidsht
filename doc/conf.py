@@ -19,7 +19,6 @@
 from pkg_resources import parse_version
 import fluidsht as fsh
 from fluiddoc import mock_modules
-import guzzle_sphinx_theme
 
 mock_modules(("shtns",))
 
@@ -90,8 +89,8 @@ pygments_style = None
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme_path = guzzle_sphinx_theme.html_theme_path()
-html_theme = "guzzle_sphinx_theme"
+#  html_theme_path = guzzle_sphinx_theme.html_theme_path()
+html_theme = "sphinx_rtd_theme"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -99,10 +98,6 @@ html_theme = "guzzle_sphinx_theme"
 #
 # html_theme_options = {}
 
-html_theme_options = {
-    # Set the name of the project to appear in the sidebar
-    "project_nav_name": "Project Name"
-}
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".

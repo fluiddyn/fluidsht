@@ -7,7 +7,7 @@ dependencies:
   - ipython
   - jupyter
   - pip:
-    - guzzle-sphinx-theme
+    - sphinx_rtd_theme
     - sphinx
     - numpydoc
     - fluiddyn
