@@ -13,7 +13,7 @@ is probably the fastest implementation for moderately sized grids.
 
     hg clone https://bitbucket.org/nschaeff/shtns
     cd shtns
-    hg update v3.1
+    hg update v3.3.1
     ./configure --enable-openmp --enable-python
     make
     python setup.py install
@@ -24,7 +24,7 @@ is probably the fastest implementation for moderately sized grids.
     relevant `FluidFFT documentation
     <https://fluidfft.readthedocs.io/en/latest/install/fft_libs.html>`_.
 
-If you have setup ``spack``, follow the instructions in the 
+If you have setup ``spack``, follow the instructions in the
 `fluiddyn/spack-packages <https://github.com/fluiddyn/spack-packages>`_
 repo and the above can be done as follows (needs improvement)::
 
