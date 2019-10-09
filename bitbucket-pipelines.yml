@@ -14,14 +14,14 @@ pipelines:
             caches:
               - pip
             script:
-              - pip install -U tox --user
+              - pip install -U pip tox --user
               - tox -vv -e py36,codecov
         - step:
             image: fluiddyn/python3-stable
             caches:
               - pip
             script:
-              - pip install -U tox --user
+              - pip install -U pip tox --user
               - tox -vv -e py36-pythran,codecov
     dev:
       - parallel:
@@ -30,14 +30,14 @@ pipelines:
             caches:
               - pip
             script:
-              - pip install -U tox --user
+              - pip install -U pip tox --user
               - tox -vv -e py36,codecov
         - step:
             image: fluiddyn/python3-stable
             caches:
               - pip
             script:
-              - pip install -U tox --user
+              - pip install -U pip tox --user
               - tox -vv -e py36-pythran,codecov
   tags:
     0.*:
