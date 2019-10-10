@@ -35,11 +35,18 @@ class SHT2DWithSHTOOLS:
         nlon=None,
         lmax=15,
         norm=None,
+        cs_phase=False,
+        flags=0,
+        radius=1,  # TODO: implement radius
         grid_type="gaussian",
-        flags=options_flags.no_csphase,
     ):
         self.norm = norm if norm else options_norm.fourpi
-        self.flags = flags
+        if flags:
+            self.flags = flags
+        else:
+            self.flags = (
+                options_flags.csphase if cs_phase else options_flags.no_csphase
+            )
 
         self.grid_type = grid_type
         if not nlat or not nlon:
@@ -76,6 +83,7 @@ class SHT2DWithSHTOOLS:
 
         self.nlm = (lmax + 1) * (lmax + 2) // 2
         self.shapeK = (self.nlm,)
+        # TODO: initialize l2_idx etc.
         # self.l2_idx =
 
     @cached_property

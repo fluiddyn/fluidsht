@@ -1,4 +1,4 @@
-from fluidsht import OperatorsSphereHarmo2D
+from fluidsht.sht2d.operators import OperatorsSphereHarmo2D
 from fluidsht.sht2d._try_with_shtools import SHT2DWithSHTOOLS
 from time import time
 
