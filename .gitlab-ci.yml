@@ -1,0 +1,24 @@
+stages:
+  - test
+  - deploy
+
+tests:
+  stage: test
+  image: fluiddyn/python3-stable
+  script:
+    - pip install -U tox --user
+    - tox -e py36,codecov
+
+tests-ext:
+  stage: test
+  image: fluiddyn/python3-stable
+  script:
+    - pip install -U tox --user
+    - tox -e py36-pythran,codecov
+
+production:
+  stage: deploy
+  script:
+    - bash ./.ci/deploy_pypi.sh
+  only:
+    - tags

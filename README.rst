@@ -19,8 +19,8 @@
    :target: http://fluidsht.readthedocs.org
    :alt: Documentation status
 
-.. |coverage| image:: https://codecov.io/bb/fluiddyn/fluidsht/branch/default/graph/badge.svg
-   :target: https://codecov.io/bb/fluiddyn/fluidsht
+.. |coverage| image:: https://codecov.io/gh/fluiddyn/fluidsht/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/fluiddyn/fluidsht
    :alt: Code coverage
 
 .. |travis| image:: https://travis-ci.org/fluiddyn/fluidsht.svg?branch=master
@@ -42,7 +42,7 @@ For a **basic installation** it should be sufficient to run::
 
   pip install fluidsht [--user]
 
-You can get the source code from `Bitbucket
+You can get the source code from `Heptapod
 <https://foss.heptapod.net/fluiddyn/fluidsht>`__ or from `the Python
 Package Index <https://pypi.org/project/fluidsht/>`__.
 The development mode is often useful if you intend to modify fluidsht. From
