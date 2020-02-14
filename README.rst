@@ -5,8 +5,8 @@
 
 |release| |pyversions| |docs| |coverage| |travis|
 
-.. |logo| image:: https://foss.heptapod.net/fluiddyn/fluidsht/raw/default/doc/logo.svg
-   :alt: FluidFFT
+.. |logo| image:: https://foss.heptapod.net/fluiddyn/fluidsht/raw/branch/default/doc/logo.svg
+   :alt: FluidSHT
 
 .. |release| image:: https://img.shields.io/pypi/v/fluidsht.svg
    :target: https://pypi.org/project/fluidsht/
