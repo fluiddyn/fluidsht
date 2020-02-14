@@ -215,7 +215,7 @@ autodoc_member_order = "bysource"
 # This config value must be a dictionary of external sites, mapping unique
 # short alias names to a base URL and a prefix.
 
-_repo = "https://bitbucket.org/fluiddyn/" + project.lower()
+_repo = "https://foss.heptapod.net/fluiddyn/" + project.lower()
 extlinks = dict(
     issue=(_repo + "/issues/%s", "issue "),
     pr=(_repo + "/pull-requests/%s", "PR #"),

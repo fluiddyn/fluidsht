@@ -11,7 +11,7 @@ is probably the fastest implementation for moderately sized grids.
 
 ``SHTns`` uses a simple GNU Autotools based installation procedure::
 
-    hg clone https://bitbucket.org/nschaeff/shtns
+    hg clone https://foss.heptapod.net/nschaeff/shtns
     cd shtns
     hg update v3.3.1
     ./configure --enable-openmp --enable-python
