@@ -7,10 +7,14 @@
 
 """
 from contextlib import suppress
+import os
 import numpy as np
 from transonic import boost
 from .. import create_sht_object
 from ..compat import cached_property
+
+
+SKIP_SHTNS = os.getenv("SKIP_SHTNS")
 
 
 Af = "float64[:]"
@@ -24,6 +28,9 @@ def get_simple_2d_method() -> str:
 
     """
     try:
+        if SKIP_SHTNS:
+            raise ImportError
+
         import shtns
 
         sht = "sht2d.with_shtns"
